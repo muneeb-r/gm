@@ -1,8 +1,23 @@
+import CreateEmployee from '@/components/modals/CreateEmployee'
 import Navbar from '@/components/nav/Navbar'
 import Sidebar from '@/components/sidebar/Sidebar'
+import axios from 'axios'
 import Head from 'next/head'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
+    const [showcreate, setShowcreate] = useState(false)
+    const [employees, setEmployees] = useState([])
+
+    useEffect(() => {
+        const fetchEmployees = async () => {
+            const res = await axios.get('/api/employee/getall')
+            setEmployees(res.data)
+        }
+        fetchEmployees()
+    }, [])
+
+
     return (
         <>
             <Head>
@@ -23,7 +38,7 @@ export default function Home() {
                                 </div>
                             </div>
                             <div className="flex">
-                                <button className='base__button'>
+                                <button onClick={() => setShowcreate(prev => !prev)} className='base__button'>
                                     <div className='mr-2'>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
@@ -35,36 +50,39 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="flex mt-4">
-                        <table className="w-full text-sm text-left text-gray-500">
+                            <table className="w-full text-sm text-left text-gray-500">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th className="px-6 py-3 font-roboto">
                                             Name
                                         </th>
                                         <th className="px-6 py-3 font-roboto">
+                                            Email
+                                        </th>
+                                        <th className="px-6 py-3 font-roboto">
                                             Phone
                                         </th>
                                         <th className="px-6 py-3 font-roboto">
-                                            Class
+                                            Whatsapp
                                         </th>
                                         <th className="px-6 py-3 font-roboto">
-                                            Medium
-                                        </th>
-                                        <th className="px-6 py-3 font-roboto">
-                                            R.No
+                                            Campus
                                         </th>
                                         <th className="px-1 py-3 font-roboto">
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <EmployeeRow />
+                                    {employees.map((emp) => (
+                                        <EmployeeRow employee={emp} />
+                                    ))}
                                 </tbody>
                             </table>
 
                         </div>
                     </div>
                 </div>
+                {showcreate && <CreateEmployee setShowcreate={setShowcreate} />}
             </main>
         </>
     )
@@ -72,24 +90,24 @@ export default function Home() {
 
 
 
-const EmployeeRow = ({}) => {
+const EmployeeRow = ({ employee }) => {
     return (
         <>
             <tr className="bg-white border-b hover:bg-gray-50 ">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center">
-                    <img className='h-10 w-10 mr-2 rounded object-cover' src={'/avatar.png'} alt='' /> asnkdjn
+                    <img className='h-10 w-10 mr-2 rounded object-cover' src={employee.picture ? employee.picture : '/avatar.png'} alt='' />  {employee.name}
                 </th>
                 <td className="px-6 py-4">
-                    Meodnad
+                    {employee.email}
                 </td>
                 <td className="px-6 py-4">
-                10
+                    {employee.phoneNumber}
                 </td>
                 <td className="px-6 py-4">
-                asd
+                {employee.whatsappnumber}
                 </td>
                 <td className="px-6 py-4">
-                adasd
+                {employee.campus?employee.campus:'No campus'}
                 </td>
                 <td className="px-1 py-4">
                     <div className='hover:bg-gray-100 w-8 h-8 flex justify-center active:bg-gray-300 hover:shadow items-center text-black rounded-full cursor-pointer'>

@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from 'axios';
+import { storage } from '@/utils/firebase';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { BarLoader } from 'react-spinners';
+import ClassForm from './forms/ClassForm';
 
 const studentSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -19,34 +23,86 @@ const studentSchema = Yup.object().shape({
     medium: Yup.string().required("Medium is required"),
 });
 
-const initialValues = {
-    name: "",
-    fathername: "",
-    fathercnic: "",
-    bayformnumber: "",
-    address: "",
-    whatsappnumber: "",
-    phonenumber: "",
-    email: "",
-    gender: "",
-    dateofbirth: "",
-    monthlyfee: "",
-    registrationfee: "",
-    medium: "",
-};
+const ViewStudent = ({ setViewStudent, viewStudent }) => {
+    const initialValues = {
+        name: viewStudent.name,
+        fathername: viewStudent.fathername,
+        fathercnic: viewStudent.fathercnic,
+        bayformnumber: viewStudent.bayformnumber,
+        address: viewStudent.address,
+        whatsappnumber: viewStudent.whatsappnumber,
+        phonenumber: viewStudent.phonenumber,
+        email: viewStudent.email,
+        gender: viewStudent.gender,
+        dateofbirth: viewStudent.dateofbirth,
+        monthlyfee: viewStudent.monthlyfee,
+        registrationfee: viewStudent.registrationfee,
+        medium: viewStudent.medium,
+    };
+    const [file, setFile] = useState(null)
+    const [progress, setProgress] = useState(0)
 
-const ViewStudent = ({setViewStudent}) => {
     useEffect(() => {
         document.body.style.overflow = 'hidden'
         return () => {
             document.body.style.overflow = 'auto'
         }
     }, [])
+
+    const handleUpload = async () => {
+
+        if (!file) return
+        let filename = (new Date().getTime()).toString() + file.name
+        const storageRef = ref(storage, 'students/' + filename);
+
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const fprogress = parseInt((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                console.log('Upload is ' + progress + '% done')
+                if (fprogress > 0) {
+                    setProgress(fprogress)
+                }
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                }
+            },
+            (error) => {
+
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                    const res = await axios.put('/api/student/update?studentId=' + viewStudent._id, {
+                        picture: downloadURL
+                    })
+                    if (res.data) {
+                        setViewStudent(prev => {
+                            return {
+                                ...prev,
+                                picture: res.data.picture
+                            }
+                        })
+                        setProgress(0)
+                        setFile(null)
+                    }
+                });
+            }
+        );
+    }
+
     return (
-        <div className='fixed top-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-sm'>
-            <div className='w-full lg:w-1/2 bg-white md:my-10 h-fit'>
+        <div className='fixed animate-bg-opacity top-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-sm'>
+            <div className='w-full lg:w-2/3 bg-white md:my-10 h-fit scale-up'>
                 <div className="flex justify-between items-center border-b border-gray-200 px-5 py-3">
-                    <h1 className='font-semibold tracking-widest  md:text-lg lg:text-xl'></h1>
+                    <h1 className='font-semibold tracking-widest flex items-center gap-3 md:text-lg'>
+                        <img className='w-10 h-10 rounded object-cover' src={viewStudent.picture} alt="" /> {viewStudent.name}
+                    </h1>
 
                     <div onClick={() => setViewStudent({})} className='bg-gray-50 p-2 rounded-full text-gray-700 cursor-pointer hover:scale-125 active:scale-90 transition-all duration-200 ease-in-out'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -54,8 +110,26 @@ const ViewStudent = ({setViewStudent}) => {
                         </svg>
                     </div>
                 </div>
-                <div className="flex p-5">
-
+                <div className="flex p-5 flex-col">
+                    <div className="flex items-center space-x-3">
+                        <img className='w-20 h-20 shadow rounded object-cover hover:scale-150 transition-all duration-300 cursor-pointer hover:m-5' src={viewStudent.picture ? viewStudent.picture : "/avatar.png"} alt="" />
+                        {file &&
+                            <div className='relative'>
+                                <img className='w-20 h-20 shadow rounded object-cover hover:scale-150 transition-all duration-300 cursor-pointer hover:m-5' src={URL.createObjectURL(file)} alt="" />
+                                <div onClick={() => setFile(null)} className="absolute -top-2 -right-2 p-[3px] text-white bg-black bg-opacity-30">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </div>
+                            </div>
+                        }
+                        {!file ? <><label className='base__button cursor-pointer' htmlFor='file'>Select</label>
+                            <input type="file" onChange={(e) => setFile(e.target.files[0])} className='hidden' id='file' accept='png,jpg,jpeg' />
+                        </> : <button className='base__button' onClick={handleUpload}>{progress > 0 && (progress) + '%'} Upload</button>}
+                    </div>
+                    {progress > 0 && <div className='flex'>
+                        <BarLoader color="#36d7b7" width={80} />
+                    </div>}
                     <Formik
                         initialValues={initialValues}
                         validationSchema={studentSchema}
@@ -67,7 +141,7 @@ const ViewStudent = ({setViewStudent}) => {
                         }}
                     >
                         {({ isSubmitting }) => (
-                            <Form className='grid grid-cols-1 md:grid-cols-2 gap-3 w-full'>
+                            <Form className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full'>
                                 <div className='mt-4 w-full flex flex-col'>
                                     <label className='font-medium' htmlFor="name">Name</label>
                                     <Field className='base__input' type="text" name="name" />
@@ -142,15 +216,23 @@ const ViewStudent = ({setViewStudent}) => {
                                     </Field>
                                     <p className='form__error'><ErrorMessage name="medium" /></p>
                                 </div>
-                                <br />
-                                <div className='mt-4'>
+                                <div></div>
+                                <div></div>
+                                <div className='mt-3'>
                                     <button className='base__button' type="submit" disabled={isSubmitting}>
-                                        Submit
+                                        Update
                                     </button>
                                 </div>
                             </Form>
                         )}
                     </Formik>
+                    <hr className='my-3' />
+                    <h1 className='text-xl font-roboto'>Add Class</h1>
+                    <div className='flex'>
+                        <div className="flex my-3">
+                            <ClassForm student={viewStudent} />
+                        </div>
+                    </div>
                 </div >
             </div >
         </div >

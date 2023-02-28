@@ -1,6 +1,7 @@
 import Navbar from '@/components/nav/Navbar'
 import Sidebar from '@/components/sidebar/Sidebar'
 import Head from 'next/head'
+import cookie from 'cookie'
 
 export default function Home() {
   return (
@@ -22,4 +23,28 @@ export default function Home() {
       </main>
     </>
   )
+}
+
+export function checkAuthorization(req) {
+  const { token } = cookie.parse(req.headers.cookie || '');
+  if(token){
+    return true
+  }else{
+    return false
+  }
+  // Check if the token is valid and return a boolean value
+}
+
+export async function getServerSideProps(context) {
+  const { req, res } = context;
+  const isAuthorized = checkAuthorization(req);
+  if (!isAuthorized) {
+    res.writeHead(302, { Location: '/login' });
+    res.end();
+  }
+
+  // Continue with the page rendering
+  return {
+    props: {}
+  }
 }

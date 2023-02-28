@@ -15,7 +15,15 @@ const studentSchema = new Schema({
   monthlyfee: Number,
   registrationfee: Number,
   medium: String,
-  rn: Number
+  rn: Number,
+  classes: {
+    type: Array
+  },
+  isActive: {
+    type: Boolean,
+    default: false
+  },
+  campus: String
 }, {
     timestamps: true
 });

@@ -1,16 +1,28 @@
+import { AuthProvider } from '@/context/authcontext/AuthContext';
 import '@/styles/globals.css'
 import NextNProgress from 'nextjs-progressbar';
+import { Toaster } from 'react-hot-toast';
 
 export default function App({ Component, pageProps }) {
+
   return <>
     <NextNProgress
-      color="yellow"
+      color="orange"
       startPosition={0.3}
       stopDelayMs={200}
       height={3}
       showOnShallow={true}
       options={{ showSpinner: false }}
     />
-    <Component {...pageProps} />
+    <Toaster
+      position="top-center"
+      reverseOrder={false}
+      toastOptions={{
+        duration: 5000,
+      }}
+    />
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
   </>
 }

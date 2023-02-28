@@ -1,5 +1,6 @@
+import { AuthContext } from '@/context/authcontext/AuthContext'
 import Link from 'next/link'
-import React from 'react'
+import React, { useContext } from 'react'
 
 const links = [
     {
@@ -54,18 +55,19 @@ const links = [
 ]
 
 const Sidebar = ({currentPage}) => {
+    const {togglesidebarondesktop} = useContext(AuthContext)
     return (
-        <div className='w-64 h-[calc(100vh-60px)] sticky top-[60px] shadow z-10'>
-            <div className=' relative w-full h-full'>
+        <div className={`${togglesidebarondesktop?'w-20':'w-64'} transition-all duration-300 h-[calc(100vh-60px)] sticky top-[60px] shadow z-10 hidden lg:block`}>
+            <div className='relative w-full h-full'>
                 <img className='w-full h-full -z-50' src="/bg.jpg" alt="" />
-                <div className='bg-gray-900 bg-opacity-60 backdrop-blur-md absolute top-0 w-64 h-[calc(100vh-60px)] z-50'>
-                    <h1 className='m-3 text-white text-lg font-roboto'>Menu</h1>
+                <div className='bg-gray-900 bg-opacity-60 backdrop-blur-md absolute top-0 w-full h-[calc(100vh-60px)] z-50'>
+                    <h1 className='m-3 text-white text-lg font-roboto hidden'>Menu</h1>
                     <div className="flex pr-2 mt-5 flex-col space-y-3">
                         {links.map((link, index) => (
                             <Link href={link.link} key={index}>
                                 <div className={`flex bg-opacity-50 hover:bg-opacity-100 rounded-r-full gap-3 px-3 py-3 hover:bg-blue-600 transition-all duration-200 active:bg-black group shadow cursor-pointer ${currentPage === link.title && 'bg-blue-600'}`}>
                                     <div className='text-white'>{link.svg}</div>
-                                    <div className="text-white">{link.title}</div>
+                                    <div className={`text-white transition-all duration-300 ${togglesidebarondesktop?'opacity-0':'opacity-100'}`}>{link.title}</div>
                                 </div>
                             </Link>
                         ))}
