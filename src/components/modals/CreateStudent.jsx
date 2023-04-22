@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const studentSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -36,7 +37,7 @@ const initialValues = {
 };
 
 
-const CreateStudent = ({ setShowCreateStudent }) => {
+const CreateStudent = ({ setShowCreateStudent, setStudents }) => {
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -46,7 +47,7 @@ const CreateStudent = ({ setShowCreateStudent }) => {
     }, [])
 
     const addStudent = async (data)=>{
-        const res = await axios.post('/api/student/create', data)
+        const res = await axios.post('/api/student/create', {...data, campus: localStorage.getItem('campus')})
         return res.data
     }
 
@@ -68,9 +69,12 @@ const CreateStudent = ({ setShowCreateStudent }) => {
                         initialValues={initialValues}
                         validationSchema={studentSchema}
                         onSubmit={(values, { setSubmitting, resetForm }) => {
+                            const loading = toast.loading('loading...')
                             addStudent(values).then((data)=>{
                                 resetForm()
                                 setSubmitting(false);
+                                setStudents(prev=> [...prev, data])
+                                toast.success('Added successfully!', {id: loading})
                             })
                         }}
                     >

@@ -6,6 +6,7 @@ import { storage } from '@/utils/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { BarLoader } from 'react-spinners';
 import ClassForm from './forms/ClassForm';
+import { deleteFile } from '@/utils/deleteFile';
 
 const studentSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -21,10 +22,11 @@ const studentSchema = Yup.object().shape({
     monthlyfee: Yup.number().required("Monthly fee is required"),
     registrationfee: Yup.number().required("Registration fee is required"),
     medium: Yup.string().required("Medium is required"),
+    isActive: Yup.boolean()
 });
 
 const ViewStudent = ({ setViewStudent, viewStudent }) => {
-    const initialValues = {
+    let initialValues = {
         name: viewStudent.name,
         fathername: viewStudent.fathername,
         fathercnic: viewStudent.fathercnic,
@@ -38,6 +40,7 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
         monthlyfee: viewStudent.monthlyfee,
         registrationfee: viewStudent.registrationfee,
         medium: viewStudent.medium,
+        isActive: viewStudent.isActive
     };
     const [file, setFile] = useState(null)
     const [progress, setProgress] = useState(0)
@@ -60,7 +63,6 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
         uploadTask.on('state_changed',
             (snapshot) => {
                 const fprogress = parseInt((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                console.log('Upload is ' + progress + '% done')
                 if (fprogress > 0) {
                     setProgress(fprogress)
                 }
@@ -82,6 +84,12 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
                         picture: downloadURL
                     })
                     if (res.data) {
+                        if (viewStudent.picture) {
+                            deleteFile(viewStudent.picture)
+                                .then(() => {
+                                }).catch((e) => {
+                                })
+                        }
                         setViewStudent(prev => {
                             return {
                                 ...prev,
@@ -94,6 +102,14 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
                 });
             }
         );
+    }
+
+    const updateStudent = async (data) => {
+        const res = await axios.put('/api/student/update?studentId=' + viewStudent._id, data);
+        if (res.data) {
+            setViewStudent(res.data)
+        }
+        return res.data;
     }
 
     return (
@@ -133,9 +149,10 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={studentSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
-                            addStudent(values).then((data) => {
-                                resetForm()
+                        onSubmit={(values, { setSubmitting, resetForm, setValues }) => {
+                            updateStudent(values).then((data) => {
+                                setValues(data)
+                                // resetForm()
                                 setSubmitting(false);
                             })
                         }}
@@ -219,7 +236,16 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
                                 <div></div>
                                 <div></div>
                                 <div className='mt-3'>
-                                    <button className='base__button' type="submit" disabled={isSubmitting}>
+                                    <div className='flex items-center'>
+                                    <Field className="w-5 h-5" type="checkbox" name="isActive" />
+                                        <span className='ml-3 font-roboto'>is Active</span>
+                                    </div>
+                                    <div>
+                                        <p className='form__error'><ErrorMessage name="medium" /></p>
+                                    </div>
+
+
+                                    <button className='base__button mt-3' type="submit" disabled={isSubmitting}>
                                         Update
                                     </button>
                                 </div>

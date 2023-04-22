@@ -6,7 +6,6 @@ async function handler(req, res) {
     if (!req.method === 'POST') return
 
     const rn = await Student.countDocuments({})+1
-    console.log(rn)
     const stu = await Student.create({ ...req.body, rn })
 
     res.status(201).json(stu)

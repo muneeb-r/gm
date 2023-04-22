@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
       color="orange"
       startPosition={0.3}
       stopDelayMs={200}
-      height={3}
+      height={2}
       showOnShallow={true}
       options={{ showSpinner: false }}
     />
@@ -18,10 +18,11 @@ export default function App({ Component, pageProps }) {
       position="top-center"
       reverseOrder={false}
       toastOptions={{
-        duration: 5000,
+        duration: 3000,
       }}
     />
     <AuthProvider>
+
       <Component {...pageProps} />
     </AuthProvider>
   </>
