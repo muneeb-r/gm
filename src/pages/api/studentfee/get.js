@@ -11,11 +11,12 @@ async function handler(req, res) {
             let fees = [];
 
             if (req.query.startedDate && req.query.endedDate) {
-                
+
                 const startDate = new Date(req.query.startedDate);
                 const endDate = new Date(req.query.endedDate);
-                
+
                 total = await StudentFee.countDocuments({
+                    campus: req.query.campus,
                     createdAt: {
                         $gte: startDate,
                         $lte: endDate
@@ -23,24 +24,31 @@ async function handler(req, res) {
                 })
 
                 fees = await StudentFee.find({
+                    campus: req.query.campus,
                     createdAt: {
                         $gte: startDate,
                         $lte: endDate
                     }
                 }).sort({ createdAt: -1 }).limit(items).skip(items * page)
 
-            } else if(req.query.limit) {
+            } else if (req.query.limit) {
 
-                fees = await StudentFee.find().sort({ createdAt: -1 }).limit(req.query.limit)
-                
+                fees = await StudentFee.find({
+                    campus: req.query.campus
+                }).sort({ createdAt: -1 }).limit(req.query.limit)
+
                 return res.status(200).json(fees)
-                
+
             } else {
-                total = await StudentFee.countDocuments()
-                fees = await StudentFee.find().sort({ createdAt: -1 }).limit(items).skip(items * page)
+                total = await StudentFee.countDocuments({
+                    campus: req.query.campus
+                })
+                fees = await StudentFee.find({
+                    campus: req.query.campus
+                }).sort({ createdAt: -1 }).limit(items).skip(items * page)
             }
 
-            res.status(200).json({ total, pages: Math.ceil(total/items), fees })
+            res.status(200).json({ total, pages: Math.ceil(total / items), fees })
 
         } catch (e) {
 

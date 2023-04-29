@@ -24,17 +24,21 @@ export default function Login() {
                 password
             }).then((res) => {
                 decodeEmployee(res.data.token).then(r => {
-                    setEmployee(r.employee)
-                    
-                    if(!r.employee.isAdmin && r.employee.campus){
-                        localStorage.setItem('campus', r.employee.campus)
-                        setLocalCampus(r.employee.campus)
+                    if(!r.employee.isAdmin){
+                        if(r.employee.campus){
+                            localStorage.setItem('campus', r.employee.campus)
+                            setLocalCampus(r.employee.campus)
+                        }else {
+                            return toast.error('You are neither an admin nor have a campus.', {id:loading})
+                        }
                     }
 
+                    setEmployee(r.employee)
                     Cookies.set('token', res.data.token)
                     toast.success('logged in', {id:loading})
                     redirectEmployee('/')
                 })
+
             }).catch((e) => {
                 console.log(e)
                 if(e.response?.data.message){

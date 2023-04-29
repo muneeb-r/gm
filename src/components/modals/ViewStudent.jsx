@@ -241,7 +241,7 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
                                         <span className='ml-3 font-roboto'>is Active</span>
                                     </div>
                                     <div>
-                                        <p className='form__error'><ErrorMessage name="medium" /></p>
+                                        <p className='form__error'><ErrorMessage name="isActive" /></p>
                                     </div>
 
 

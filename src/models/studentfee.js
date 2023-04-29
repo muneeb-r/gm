@@ -13,7 +13,10 @@ const FeeSchema = new Schema({
     monthlyfee: Number,
     month: String,
     remainings: Number,
-    campus: String
+    campus: {
+        type: String,
+        required: true
+    }
 }, {
     timestamps: true
 });

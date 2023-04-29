@@ -1,47 +1,106 @@
 import Navbar from '@/components/nav/Navbar'
 import Sidebar from '@/components/sidebar/Sidebar'
+import { AuthContext } from '@/context/authcontext/AuthContext'
+import { authenticate } from '@/utils/authenticate'
 import { fetchStudent } from '@/utils/fetchStudent'
 import axios from 'axios'
 import moment from 'moment'
 import Head from 'next/head'
-import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { ClipLoader } from 'react-spinners'
+
 
 const fees = () => {
     const [fees, setFees] = useState([])
     const [total, setTotal] = useState({})
+    const {employee} = useContext(AuthContext)
     const [currentPage, setCurrentPage] = useState(1)
+    const [isLoading, setIsLoading] = useState(false)
+    const [filters, setFilters] = useState({
+        startedDate: '',
+        endedDate: ''
+    })
+    const router = useRouter()
 
-    useEffect(() => {
-        const fetchFees = async () => {
-            const res = await axios.get('/api/studentfee/get')
+    if(!employee.isAdmin){
+        router.back()
+    }
+
+    const fetchFees = async (ignoreDates) => {
+        let res = {};
+        setCurrentPage(1)
+        setTotal({})
+        setFees([])
+        setIsLoading(true)
+        try {
+            if (filters.startedDate !== '' && filters.endedDate !== '' && !ignoreDates) {
+                res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
+            } else {
+                res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}`)
+            }
             setFees(res.data.fees)
             setTotal({
                 total: res.data.total,
                 pages: res.data.pages
             })
+            setIsLoading(false)
+        } catch (error) {
+            toast.error('something went wrong')
+            setIsLoading(false)
+            console.log(error)
         }
+
+    }
+    useEffect(() => {
         fetchFees()
     }, [])
 
-    const fetchMore = async()=>{
+    const fetchMore = async () => {
         let loading = toast.loading('loading...')
         try {
-            const res = await axios.get('/api/studentfee/get?page='+currentPage)
-            setFees([...fees,...res.data.fees])
-            setCurrentPage(prev=> prev+1)
-            toast.success('finished', {id: loading})
+            let res = {};
+            if (filters.startedDate !== '' && filters.endedDate !== '') {
+                res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
+            } else {
+                res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}`)
+            }
+            setFees([...fees, ...res.data.fees])
+            setCurrentPage(prev => prev + 1)
+            toast.success('finished', { id: loading })
         } catch (error) {
-            toast.error('something went wrong...', {id: loading})            
+            toast.error('something went wrong...', { id: loading })
         }
     }
 
-    function getFeeSum(fee){
+    function getFeeSum(fee) {
         let sum = 0
-        for(let i = 0; i < fee.length; i++){
+        for (let i = 0; i < fee.length; i++) {
             sum += fee[i].feeamount
         }
         return sum
+    }
+
+    const handleChange = (event) => {
+        let { name, value } = event.target
+        setFilters({
+            ...filters,
+            [name]: value
+        })
+    }
+
+    const handleFilterApply = () => {
+        if (filters.startedDate === '' || filters.endedDate === '') return
+        fetchFees()
+    }
+
+    const handleClear = ()=>{
+        setFilters({
+            startedDate: '',
+            endedDate: ''
+        })
+        fetchFees(true)
     }
 
     return (
@@ -61,78 +120,21 @@ const fees = () => {
                             <div className="mx-auto max-w-screen-xl">
                                 <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
                                     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-                                        <div className="w-full md:w-1/2">
-                                            <form className="flex items-center">
-                                                <label for="simple-search" className="sr-only">Search</label>
-                                                <div className="relative w-full">
-                                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                        <svg aria-hidden="true" className="w-5 h-5 text-gray-500 " fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                                                        </svg>
-                                                    </div>
-                                                    <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 " placeholder="Search" required="" />
-                                                </div>
-                                            </form>
-                                        </div>
                                         <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                                            <button type="button" className="flex items-center justify-center text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
-                                                <svg className="h-3.5 w-3.5 mr-3" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                    <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                                                </svg>
-                                                Add product
-                                            </button>
-                                            <div className="flex items-center space-x-3 w-full md:w-auto">
-                                                <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown" className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button">
-                                                    <svg className="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                        <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                            <div className="flex gap-3 items-center">
+                                                <input onChange={handleChange} value={filters.startedDate} name='startedDate' type="date" className='base__input py-[5px] px-3 mt-0 border-gray-100 bg-white text-sm' />
+                                                <input onChange={handleChange} value={filters.endedDate} name='endedDate' type="date" className='base__input py-[5px] px-3 mt-0 border-gray-100 bg-white text-sm' />
+                                                <button className="base__button px-3 text-sm" onClick={handleFilterApply}>Apply</button>
+
+                                                {filters.startedDate !== '' && filters.endedDate !== '' && <div onClick={handleClear} className='flex p-1 bg-gray-100 rounded-full shadow cursor-pointer hover:scale-125 transition-all duration-300'>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                     </svg>
-                                                    Actions
-                                                </button>
-                                                <div id="actionsDropdown" className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:divide-gray-600">
-                                                    <ul className="py-1 text-sm text-gray-700" aria-labelledby="actionsDropdownButton">
-                                                        <li>
-                                                            <a href="#" className="block py-2 px-4 hover:bg-gray-100">Mass Edit</a>
-                                                        </li>
-                                                    </ul>
-                                                    <div className="py-1">
-                                                        <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete all</a>
-                                                    </div>
-                                                </div>
-                                                <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 " type="button">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
-                                                        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-                                                    </svg>
-                                                    Filter
-                                                    <svg className="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                        <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                                    </svg>
-                                                </button>
-                                                <div id="filterDropdown" className="z-10 hidden w-48 p-3 bg-white rounded-lg shadow">
-                                                    <h6 className="mb-3 text-sm font-medium text-gray-900">Choose brand</h6>
-                                                    <ul className="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                                        <li className="flex items-center">
-                                                            <input id="apple" type="checkbox" value="" className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                                            <label for="apple" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Apple (56)</label>
-                                                        </li>
-                                                        <li className="flex items-center">
-                                                            <input id="fitbit" type="checkbox" value="" className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                                            <label for="fitbit" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Microsoft (16)</label>
-                                                        </li>
-                                                        <li className="flex items-center">
-                                                            <input id="razor" type="checkbox" value="" className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                                            <label for="razor" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Razor (49)</label>
-                                                        </li>
-                                                        <li className="flex items-center">
-                                                            <input id="nikon" type="checkbox" value="" className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                                            <label for="nikon" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Nikon (12)</label>
-                                                        </li>
-                                                        <li className="flex items-center">
-                                                            <input id="benq" type="checkbox" value="" className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                                            <label for="benq" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">BenQ (74)</label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                </div>}
                                             </div>
+                                        </div>
+                                        <div className="">
+                                            <span className='text-sm'>Records: <b>{total.total ? total.total : '__'}</b></span>
                                         </div>
                                     </div>
                                     <div className="overflow-x-auto">
@@ -141,6 +143,8 @@ const fees = () => {
                                                 <tr>
                                                     <th scope="col" className="px-4 py-3 min-w-[30px] max-w-[30px]">Srno.</th>
                                                     <th scope="col" className="px-4 py-3">Student</th>
+                                                    <th scope="col" className="px-4 py-3">Father</th>
+                                                    <th scope="col" className="px-4 py-3">Class</th>
                                                     <th scope="col" className="px-4 py-3">Amount</th>
                                                     <th scope="col" className="px-4 py-3">Remainings</th>
                                                     <th scope="col" className="px-4 py-3">Created At</th>
@@ -155,16 +159,25 @@ const fees = () => {
                                                 {fees.map((fee, i) => (
                                                     <FeeRow fee={fee} key={fee._id + i} i={i + 1} />
                                                 ))}
+
                                                 <tr>
                                                     <td className="px-4 py-3 text-lg">Total</td>
                                                     <td className="px-4 py-3"></td>
-                                                    <td className="px-4 py-3 text-lg">Rs.{getFeeSum(fees)}</td>
+                                                    <td className="px-4 py-3 text-lg"><b>Rs.{new Intl.NumberFormat().format(getFeeSum(fees))}</b></td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        {isLoading && <div className='p-5 flex flex-1 justify-center items-center '>
+                                            <ClipLoader
+                                                color="orange"
+                                                cssOverride={{}}
+                                                size={35}
+                                                speedMultiplier={1}
+                                            />
+                                        </div>}
                                     </div>
                                     <nav className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-                                        <button onClick={fetchMore} disabled={currentPage===total?.pages} className="base__button">Show more</button>
+                                        <button onClick={fetchMore} disabled={currentPage === total?.pages} className="base__button">Show more</button>
                                     </nav>
                                 </div>
                             </div>
@@ -179,11 +192,19 @@ const fees = () => {
 
 export default fees
 
+export async function getServerSideProps(context) {
+    authenticate(context)
+
+    return {
+        props: {}
+    }
+}
+
 const FeeRow = ({ fee, i }) => {
     const [student, setStudent] = useState({})
 
     useEffect(() => {
-        fetchStudent(fee.studentId).then((data)=>{
+        fetchStudent(fee.studentId).then((data) => {
             setStudent(data)
         })
     }, [])
@@ -193,13 +214,15 @@ const FeeRow = ({ fee, i }) => {
             <th scope="row" className="px-4 py-3 font-medium text-gray-900 max-w-[30px]">{i}</th>
             <td className="px-4 py-3 min-w-[180px]">
                 <div className="flex gap-2 items-center">
-                    <img className='w-10 h-10 rounded shadow object-cover' src={student.picture?student.picture:'avatar.png'} alt={student.name} />
-                    <span className='font-roboto'>
+                    <img className='w-10 h-10 rounded shadow object-cover' src={student.picture ? student.picture : 'avatar.png'} alt={student.name} />
+                    <span className='font-semibold'>
                         {student.name}
                     </span>
                 </div>
             </td>
-            <td className="px-4 py-3">{fee.feeamount}</td>
+            <td className="px-4 py-3">{student.fathername}</td>
+            <td className="px-4 py-3">{fee.class.title}</td>
+            <td className="px-4 py-3">{new Intl.NumberFormat().format(fee.feeamount)}</td>
             <td className="px-4 py-3">{fee.remainings}</td>
             <td className="px-4 py-3">{moment(fee?.createdAt).format('L')}</td>
             <td className="px-4 py-3">{student.rn}</td>

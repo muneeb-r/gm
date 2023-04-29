@@ -3,7 +3,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 const fetchFees = async (setFees) => {
-  const res = await axios.get('/api/studentfee/get?limit=5')
+  const res = await axios.get('/api/studentfee/get?limit=5&campus='+localStorage.getItem('campus'))
   setFees(res.data)
 }
 
@@ -19,8 +19,8 @@ const Fees = () => {
       <h1 className='p-4 font-roboto text-xl'>Lastest Added Fees</h1>
       <hr className='mx-3' />
       <div className="flex p-3 flex-col gap-1">
-        {fees.map((fee) => (
-          <FeeItem fee={fee} key={fee._id} />
+        {fees.map((fee, i) => (
+          <FeeItem fee={fee} key={fee._id+(i).toString()} />
         ))}
       </div>
     </div>

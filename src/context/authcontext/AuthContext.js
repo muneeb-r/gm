@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { createContext, useEffect, useState } from "react";
 import SelectCampus from "../SelectCampus";
+import Head from "next/head";
+import { ClipLoader } from "react-spinners";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -39,7 +41,7 @@ const AuthProvider = ({ children }) => {
         fetchCampuses()
 
         const fetchClasses = async () => {
-            const res = await axios.get('/api/classes/getall')
+            const res = await axios.get('/api/classes/getall?campus='+localStorage.getItem('campus'))
             setClasses(res.data)
         }
         fetchClasses()
@@ -48,14 +50,31 @@ const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ employee, setEmployee, decodeEmployee,
-         togglesidebarondesktop, setTogglesidebarondesktop, setLocalCampus, campuses, setCampuses, classes, setClasses}}>
+        <AuthContext.Provider value={{
+            employee, setEmployee, decodeEmployee,
+            togglesidebarondesktop, setTogglesidebarondesktop, setLocalCampus, campuses, setCampuses, classes, setClasses
+        }}>
 
             {router.asPath === '/login' && children}
-            {Object.keys(employee).length!==0 && router.asPath !== '/login' && employee.isAdmin && !localCampus && (
+            {Object.keys(employee).length !== 0 && router.asPath !== '/login' && employee.isAdmin && !localCampus && (
                 <SelectCampus localCampus={localCampus} setLocalCampus={setLocalCampus} employee={employee} setEmployee={setEmployee} />
             )}
-            {Object.keys(employee).length!==0 && localCampus && children}
+            {Object.keys(employee).length !== 0 ? localCampus && children : (
+                <>
+                    <Head>
+                        <title>loading...</title>
+                    </Head>
+                    <div className='p-5 w-full h-screen flex flex-1 justify-center items-center '>
+                        <ClipLoader
+                            color="orange"
+                            cssOverride={{}}
+                            size={50}
+                            speedMultiplier={1}
+                        />
+                    </div>
+                </>
+
+            )}
         </AuthContext.Provider>
     );
 };

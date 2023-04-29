@@ -23,7 +23,8 @@ async function handler(req, res) {
                     feeamount: req.body.feeamount,
                     monthlyfee: req.body.monthlyfee,
                     month: req.body.month,
-                    remainings: req.body.remainings
+                    remainings: req.body.remainings,
+                    campus: req.body.campus
                 })
                 const fee = await newFee.save()
 

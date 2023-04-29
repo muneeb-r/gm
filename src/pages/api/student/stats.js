@@ -11,6 +11,7 @@ async function handler(req, res) {
             stats = await Student.aggregate([
                 {
                     $match: {
+                        campus: req.query.campus,
                         createdAt: {
                             $gte: new Date(req.query.startDate),
                             $lte: new Date(req.query.endDate)
@@ -47,6 +48,11 @@ async function handler(req, res) {
 
         } else {
             stats = await Student.aggregate([
+                {
+                    $match: {
+                        campus: req.query.campus
+                    }
+                },
                 {
                     $sort: {
                         createdAt: -1

@@ -21,44 +21,51 @@ export default function Home() {
   })
 
   async function fetchStudentsStats(type) {
+    try {
+      
+      let res = [];
+      if (studentFilters.startDate && studentFilters.endDate) {
+        res = await axios.get(`/api/student/stats?type=${type}&startDate=${studentFilters.startDate}&endDate=${studentFilters.endDate}&campus=${localStorage.getItem('campus')}`)
+      } else {
+        res = await axios.get(`/api/student/stats?type=${type}&campus=${localStorage.getItem('campus')}`)
+      }
   
-    let res = [];  
-    if(studentFilters.startDate && studentFilters.endDate){
-       res = await axios.get(`/api/student/stats?type=${type}&startDate=${studentFilters.startDate}&endDate=${studentFilters.endDate}`)
-    }else{
-       res = await axios.get(`/api/student/stats?type=${type}`)
-    }
-
-    let newData = {};
-
+      let newData = {};
+  
       if (res.data[0]._id.split('-')[2]) {
         newData = {
           labels: res.data?.map((s) => s._id.split('-')[0].slice(2) + '-' + s._id.split('-')[1] + '-' + s._id.split('-')[2]),
           data: res.data?.map((s) => s.count),
         }
-      } else if(res.data[0]._id.split('-')[2]){
+      } else if (res.data[0]._id.split('-')[2]) {
         newData = {
           labels: res.data?.map((s) => s._id.split('-')[0].slice(2) + '-' + s._id.split('-')[1]),
           data: res.data?.map((s) => s.count),
         }
-      }else {
+      } else {
         newData = {
           labels: res.data?.map((s) => s._id),
           data: res.data?.map((s) => s.count),
         }
       }
-
+  
       setstudentData(newData)
+    } catch (error) {
+    }
   }
 
   const getNumberOfStudents = async () => {
-    const res = await axios.get(`/api/student/getNumberOfStudents`)
-    setNumberOfStudents(res.data)
+    try {
+      const res = await axios.get(`/api/student/getNumberOfStudents?campus=${localStorage.getItem('campus')}`)
+      setNumberOfStudents(res.data)
+      
+    } catch (error) {
+    }
   }
 
   const handleChange = async (event) => {
     const { name, value } = event.target
-    setStudentFilters({...studentFilters, [name]: value })
+    setStudentFilters({ ...studentFilters, [name]: value })
   }
 
   useEffect(() => {
@@ -66,9 +73,16 @@ export default function Home() {
     fetchStudentsStats(filterType)
   }, [])
 
-  const handeTypeChange = (e)=>{
+  const handeTypeChange = (e) => {
     setFilterType(e.target.value)
     fetchStudentsStats(e.target.value)
+  }
+
+  const handleClear = ()=>{
+    setStudentFilters({
+      startDate: '',
+      endDate: '',
+    })
   }
 
   return (
@@ -100,12 +114,19 @@ export default function Home() {
                           <option value="month">Month</option>
                           <option value="year">Year</option>
                         </select>
-                        <input onChange={handleChange} name='startDate' type="date" className='base__input py-[5px] px-1 mt-0 border-gray-100 bg-white text-sm' />
-                        <input onChange={handleChange} name='endDate' type="date" className='base__input py-[5px] px-1 mt-0 border-gray-100 bg-white text-sm' />
-                        <button onClick={()=> fetchStudentsStats(filterType)} className="base__button px-3 text-sm">Apply</button>
+                        <input onChange={handleChange} value={studentFilters.startDate} name='startDate' type="date" className='base__input py-[5px] px-1 mt-0 border-gray-100 bg-white text-sm' />
+                        <input onChange={handleChange} value={studentFilters.endDate} name='endDate' type="date" className='base__input py-[5px] px-1 mt-0 border-gray-100 bg-white text-sm' />
+                        <button onClick={() => fetchStudentsStats(filterType)} className="base__button px-3 text-sm">Apply</button>
+
+                        {studentFilters.startDate !=='' && studentFilters.endDate !=='' && <div onClick={handleClear} className='flex p-1 bg-gray-100 rounded-full shadow cursor-pointer hover:scale-125 transition-all duration-300'>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </div>}
+
                       </div>
 
-                      <div onClick={()=> fetchStudentsStats(filterType)} className='w-8 h-8 font-bold rounded-full flex justify-center items-center bg-gray-50 hover:scale-125 active:rotate-180 transition-all duration-300 ease-in-out cursor-pointer'>
+                      <div onClick={() => fetchStudentsStats(filterType)} className='w-8 h-8 font-bold rounded-full flex justify-center items-center bg-gray-50 hover:scale-125 active:rotate-180 transition-all duration-300 ease-in-out cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>

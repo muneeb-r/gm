@@ -1,16 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { AuthContext } from "@/context/authcontext/AuthContext";
 
 const ClassSchema = Yup.object().shape({
     title: Yup.string()
         .required("Title is required"),
+    campus: Yup.string()
+        .required("Campus is required"),
 });
 
 
 const CreateClass = ({ setShowCreateClass, setClasses }) => {
+    const { campuses } = useContext(AuthContext)
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -19,11 +23,11 @@ const CreateClass = ({ setShowCreateClass, setClasses }) => {
         }
     }, [])
 
-    const addClass = async(data)=>{
+    const addClass = async (data) => {
         let loading = toast.loading('loading...')
         const res = await axios.post('/api/classes/create', data)
-        setClasses(prev=> [...prev, res.data])
-        toast.success('Added...', {id: loading})
+        setClasses(prev => [...prev, res.data])
+        toast.success('Added...', { id: loading })
         setShowCreateClass(false)
     }
 
@@ -48,16 +52,27 @@ const CreateClass = ({ setShowCreateClass, setClasses }) => {
                         }}
                     >
                         {({ errors, touched }) => (
-                            <Form className='w-full'>
-                                <div className="flex flex-col w-full">
+                            <Form className='w-full flex flex-col gap-3'>
+                                <div className="flex flex-col">
                                     <label htmlFor="title">Title*</label>
                                     <Field className='base__input' type="text" id="title" name="title" />
                                     <p className='form__error'><ErrorMessage className='form__error' name="title" /></p>
                                 </div>
+                                <div className='flex flex-col'>
+                                    <label htmlFor="campus">Campus</label>
+                                    <Field className='base__input' as="select" id="campus" name="campus">
+                                        <option value="">Select a campus</option>
+                                        {campuses.map((c) => (
+                                            <option value={c.title}>{c.title}</option>
+                                        ))}                                    </Field>
+                                    <p className='form__error'><ErrorMessage name="campus" /></p>
+                                </div>
+                                <div>
+                                    <button type="submit" className='base__button mt-4' disabled={Object.keys(errors).length > 0}>
+                                        Add Class
+                                    </button>
 
-                                <button type="submit" className='base__button mt-4' disabled={Object.keys(errors).length > 0}>
-                                    Add Class
-                                </button>
+                                </div>
                             </Form>
                         )}
                     </Formik>

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { AuthContext } from '@/context/authcontext/AuthContext';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -26,6 +27,7 @@ const initialValues = {
 
 
 const CreateEmployee = ({ setShowcreate }) => {
+    const {campuses} = useContext(AuthContext)
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -61,12 +63,13 @@ const CreateEmployee = ({ setShowcreate }) => {
                         initialValues={initialValues}
                         validationSchema={validationSchema}
                         onSubmit={(values, { setSubmitting, resetForm }) => {
+                            let loading = toast.loading('loading...')
                             addEmployee(values).then(res=>{
-                                toast.success('Employee successfully added.')
+                                toast.success('Employee successfully added.', {id:loading})
                                 resetForm()
                                 setSubmitting(false);
                             }).catch(e=>{
-                                toast.error(e.response.data.message)
+                                toast.error(e.response.data.message, {id:loading})
                                 setSubmitting(false);
                             })
                         }}
@@ -107,10 +110,9 @@ const CreateEmployee = ({ setShowcreate }) => {
                                     <label htmlFor="campus">Campus (optional)</label>
                                     <Field className='base__input' as="select" id="campus" name="campus">
                                         <option value="">Select a campus</option>
-                                        <option value="Campus 1">Campus 1</option>
-                                        <option value="Campus 2">Campus 2</option>
-                                        <option value="Campus 3">Campus 3</option>
-                                    </Field>
+                                        {campuses.map((c)=>(
+                                            <option value={c.title}>{c.title}</option>
+                                        ))}                                    </Field>
                                     <p className='form__error'><ErrorMessage name="campus" /></p>
                                 </div>
                                 <div>

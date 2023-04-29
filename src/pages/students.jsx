@@ -9,8 +9,9 @@ import { deleteFile } from '@/utils/deleteFile'
 import axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { ClipLoader } from 'react-spinners'
 
 const Students = ({ }) => {
     const [showCreateStudent, setShowCreateStudent] = useState(false)
@@ -19,11 +20,18 @@ const Students = ({ }) => {
     const [students, setStudents] = useState([])
     const [viewStudent, setViewStudent] = useState({})
     const [feeStudent, setFeeStudent] = useState({})
-    const {classes} = useContext(AuthContext)
+    const { classes } = useContext(AuthContext)
+    const [isLoading, setIsLoading] = useState(false)
 
     const fetchStudents = async () => {
-        const res = await axios.get(`/api/student/getall?campus=${localStorage.getItem('campus')}`)
-        setStudents(res.data)
+        try {
+            setIsLoading(true)
+            const res = await axios.get(`/api/student/getall?campus=${localStorage.getItem('campus')}`)
+            setStudents(res.data)
+            setIsLoading(false)
+        } catch (error) {
+            setIsLoading(false)
+        }
     }
     useEffect(() => {
         fetchStudents()
@@ -31,8 +39,16 @@ const Students = ({ }) => {
 
     const handleFilter = async () => {
         if (fclass && fsession) {
-            const res = await axios.get(`/api/student/search?byClass=true&class=${fclass}&session=${fsession}&campus=${localStorage.getItem('campus')}`)
-            setStudents(res.data)
+            try {
+                setStudents([])
+                setIsLoading(true)
+                const res = await axios.get(`/api/student/search?byClass=true&class=${fclass}&session=${fsession}&campus=${localStorage.getItem('campus')}`)
+                setStudents(res.data)
+                setIsLoading(false)
+            } catch (error) {
+                toast.error('Something went wrong.')
+                setIsLoading(false)
+            }
         }
     }
 
@@ -135,24 +151,24 @@ const Students = ({ }) => {
                             <div className='h-fit'>
                                 <div className="overflow-auto shadow sm:rounded-lg border border-gray-200">
                                     <table className="w-full min-w-[700px] text-sm text-left text-gray-500">
-                                        <thead className="text-sm text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
+                                        <thead className="text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
                                             <tr>
-                                                <th className="px-6 py-3 font-roboto">
+                                                <th className="px-6 py-3 font-bold">
                                                     Name
                                                 </th>
-                                                <th className="px-6 py-3 font-roboto">
+                                                <th className="px-6 py-3 font-bold">
                                                     Father Name
                                                 </th>
-                                                <th className="px-6 py-3 font-roboto">
+                                                <th className="px-6 py-3 font-bold">
                                                     Class
                                                 </th>
-                                                <th className="px-6 py-3 font-roboto">
+                                                <th className="px-6 py-3 font-bold">
                                                     Medium
                                                 </th>
-                                                <th className="px-6 py-3 font-roboto">
+                                                <th className="px-6 py-3 font-bold">
                                                     R.No
                                                 </th>
-                                                <th className="px-1 py-3 font-roboto">
+                                                <th className="px-1 py-3 font-bold">
                                                 </th>
                                             </tr>
                                         </thead>
@@ -162,6 +178,14 @@ const Students = ({ }) => {
                                             ))}
                                         </tbody>
                                     </table>
+                                    {isLoading && <div className='p-5 flex flex-1 justify-center items-center '>
+                                        <ClipLoader
+                                            color="orange"
+                                            cssOverride={{}}
+                                            size={35}
+                                            speedMultiplier={1}
+                                        />
+                                    </div>}
                                 </div>
                             </div>
                         </div>
@@ -181,6 +205,17 @@ export default Students
 
 const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete }) => {
     const [showMenu, setShowMenu] = useState(false)
+    const ref = useRef()
+
+    useEffect(() => {
+        const closeMenu = (e) => {
+            if (!ref.current.contains(e.target)) {
+                setShowMenu(false)
+            }
+        }
+        document.addEventListener('mousedown', closeMenu)
+        return () => document.removeEventListener('mousedown', closeMenu)
+    }, [])
 
     return (
         <>
@@ -193,7 +228,7 @@ const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete }) =>
                     {student.fathername}
                 </td>
                 <td className="px-6 py-4">
-                    {student.classes[student.classes.length-1]?.class}
+                    {student.classes[student.classes.length - 1]?.class}
                 </td>
                 <td className="px-6 py-4">
                     {student.medium}
@@ -201,39 +236,41 @@ const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete }) =>
                 <td className="px-6 py-4">
                     {student.rn}
                 </td>
-                <td className="px-1 py-4 relative">
-                    <div onClick={() => setShowMenu(prev => !prev)} className='hover:bg-gray-100 w-8 h-8 flex justify-center active:bg-gray-300 hover:shadow items-center text-black rounded-full cursor-pointer'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                        </svg>
-                    </div>
-                    <div className={`absolute w-[110px] py-2 rounded bg-white transition-all duration-300 ease-in-out flex flex-col shadow-md border border-gray-100 ${showMenu ? 'scale-100 top-10 right-[54px]' : 'scale-0 top-5 right-5'}`}>
-                        <div onClick={() => setViewStudent(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </div>
-                            <div>View</div>
+                <td className="px-1 py-4">
+                    <div ref={ref} className="relative">
+                        <div onClick={() => setShowMenu(prev => !prev)} className='hover:bg-gray-100 w-8 h-8 flex justify-center active:bg-gray-300 hover:shadow items-center text-black rounded-full cursor-pointer'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                            </svg>
                         </div>
-                        <div onClick={() => setFeeStudent(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-
+                        <div className={`absolute w-[110px] py-2 rounded bg-white transition-all duration-300 ease-in-out flex flex-col shadow-md border border-gray-100 ${showMenu ? 'scale-100 top-5 right-12' : 'scale-0 -top-5 right-0'}`}>
+                            <div onClick={() => setViewStudent(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div>View</div>
                             </div>
-                            <div>Add Fee</div>
-                        </div>
-                        <div onClick={() => handleDelete(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-red-600">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                </svg>
+                            <div onClick={() => setFeeStudent(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
 
+                                </div>
+                                <div>Add Fee</div>
                             </div>
-                            <div className='text-red-500'>Delete</div>
+                            <div onClick={() => handleDelete(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-red-600">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+
+                                </div>
+                                <div className='text-red-500'>Delete</div>
+                            </div>
                         </div>
                     </div>
                 </td>

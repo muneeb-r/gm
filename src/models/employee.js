@@ -2,7 +2,10 @@ import { Schema, model, models } from 'mongoose';
 
 const EmployeeSchema = new Schema({
     name: String,
-    email: String,
+    email: {
+        type: String,
+        unique: true
+    },
     phoneNumber: Number,
     whatsappnumber: Number,
     password: String,

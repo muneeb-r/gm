@@ -5,6 +5,10 @@ const ClassesSchema = new Schema({
         type: String,
         required: true
     },
+    campus: {
+        type: String,
+        required: true
+    }
 }, {
     timestamps: true
 });

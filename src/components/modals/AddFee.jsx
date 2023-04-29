@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import moment from 'moment/moment';
 import { getMonthName, getMonthsBetweenDates } from '@/utils/getMonth';
+import { redirectEmployee } from '@/utils/redirectEmployee';
 
 const initialValues = {
   class: '',
@@ -21,9 +21,6 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
     class: '',
     session: ''
   })
-  const [fees, setFees] = useState([])
-  const [scale, setScale] = useState(100)
-  const [marginTop, setMarginTop] = useState(0)
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -86,8 +83,8 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
       let data = {
         ...formData,
         studentId: feeStudent._id,
+        campus: localStorage.getItem('campus'),
         monthlyfee: feeStudent.monthlyfee,
-        campus: localStorage.getItem('campus')
       }
 
       createFee(data)
@@ -108,33 +105,20 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
     } else {
       toast.error('Please provide the required information!')
     }
-
   }
+
+
+  const handleReceipt = () => {
+    if (filters.class && filters.session) {
+       redirectEmployee(`/receipt?studentId=${feeStudent._id}&class=${filters.class}&session=${filters.session}`)
+    }
+  }
+
 
   return (
     <div className='fixed top-0 left-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-sm'>
       <div className='w-full lg:w-2/3 bg-white md:my-10 h-fit scale-up'>
 
-        {/* <div className="flex w-full fixed top-0 h-screen left-0 bg-white justify-center">
-          <div className='flex flex-col justify-between relative'>
-
-          <div className="flex border border-gray-100 p-3 absolute" style={{transform: `scale(${scale}%)`, marginTop: marginTop}}>
-            <div className="flex w-96">
-              <img src={feeStudent.picture} className='w-16 h-16 object-cover' alt="" />
-              <span>{feeStudent.name}</span>
-              <span>class 10</span>
-              <span>2023-2024</span>
-            </div>
-            <div className="flex"></div>
-          </div>
-
-          <div className="flex mt-64">
-            <input type="range" min='50' max='200' onChange={(e)=> setScale(parseInt(e.target.value))} />
-            <input type="range" min='0' max='200' onChange={(e)=> setMarginTop(parseInt(e.target.value))} />
-          </div>
-
-          </div>
-        </div> */}
 
         <div className="flex justify-between items-center border-b border-gray-200 px-5 py-3">
           <h1 className='font-semibold tracking-widest  md:text-lg lg:text-xl'>Fee Details</h1>
@@ -145,24 +129,33 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
             </svg>
           </div>
         </div>
-        <div className="flex p-5">
+        <div className="p-5">
 
-          <div className="flex flex-col">
 
-            <div className='flex justify-between space-x-2'>
+
+          {/* <div className='flex justify-between space-x-2'>
               <div className="flex border border-gray-200 rounded-xl py-3 px-3 flex-col shadow">
                 <div>
                   <Image src={feeStudent.picture} className='object-cover w-40 h-40 rounded' width={200} height={200} alt='' />
                 </div>
                 <div className='mt-3 text-center font-roboto text-gray-800'>{feeStudent.name}</div>
               </div>
-              <div className="flex flex-1 border border-gray-200 rounded-xl shadow p-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae exercitationem rem ut, sapiente totam sed ad voluptatibus eos, magni corrupti voluptatum nam in repudiandae a consectetur unde vero ipsam obcaecati! Velit magni, numquam ducimus beatae ex inventore corrupti, natus harum tempore atque illum a aliquam error saepe. Cupiditate aliquam perferendis dolore culpa porro soluta deserunt veniam deleniti. Necessitatibus maiores ipsum enim illum nisi asperiores, inventore iure dolor ipsa fuga aliquam beatae, error iusto aliquid similique quae possimus iste sapiente. Unde vel labore aspernatur dolore at accusamus facere architecto officia nesciunt?</div>
-            </div>
-            <hr className="my-3 mx-3" />
-            <div className='flex justify-between space-x-2 items-start'>
-              <div className="flex border border-gray-200 rounded-xl px-3 py-3 shadow">
+              <div className="flex flex-1 border border-gray-200 rounded-xl shadow p-3 justify-center items-center">
+                  <div className="flex">Monthly fee: <b className='ml-1'>{new Intl.NumberFormat().format(feeStudent.monthlyfee)}/-</b></div>
+              </div>
+            </div> */}
+          {/* <hr className="my-3 mx-3" /> */}
+          <div className='flex gap-2 items-start justify-between'>
+            <div className='flex flex-col gap-3 w-1/3 '>
+              <div className="flex border border-gray-200 rounded-xl py-3 px-3 flex-col items-center shadow">
+                <div className=''>
+                  <img className='h-[190px] max-w-[250px] object-cover rounded' src={feeStudent.picture} alt={feeStudent.name} />
+                </div>
+                <div className='mt-3 text-center font-roboto text-gray-800'>{feeStudent.name}</div>
+              </div>
 
-                <form className='flex flex-col w-60 space-y-3' onSubmit={handleSubmit}>
+              <div className="flex border border-gray-200 rounded-xl px-3 py-3 shadow">
+                <form className='flex flex-col w-full space-y-3' onSubmit={handleSubmit}>
                   <select className='base__select' onChange={handleChange} value={formData.class} name='class'>
                     <option value="">Select a class...</option>
                     {feeStudent.classes.map((c) => (
@@ -200,39 +193,45 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
                 </form>
 
               </div>
-              <div className="flex-1 space-y-2">
-                <div className='flex space-x-2'>
-                  <select className='base__select' onChange={handleFilterChange} name='class'>
-                    <option value="">Select a class...</option>
-                    {feeStudent.classes.map((c) => (
-                      <option value={c.class}>{c.class}</option>
-                    ))}
-                  </select>
+            </div>
+            <div className="w-2/3 flex flex-col gap-2">
 
-                  <select className='base__select' onChange={handleFilterChange} name='session'>
-                    <option value="">Select Session</option>
-                    {feeStudent.classes.map((c) => (
-                      <option value={c.session}>{c.session}</option>
-                    ))}
-                  </select>
-                  <button onClick={fetchFees} className='base__button'>View</button>
-                </div>
-                <div className='flex border border-gray-200 rounded-xl p-2 shadow'>
-                  <div className="flex flex-col flex-1 space-y-2">
-                    {datesForFeeDetail.map((date, i) => (
-                      <FeeItem key={date + i} date={date} i={i + 1} studentId={feeStudent._id} classes={filters.class} session={filters.session} />
-                    ))}
-                    {(!filters.class || !filters.session) && fees.length === 0 && (
-                      <div className="flex p-3 text-xl font-roboto text-gray-500">
-                        Select class and session to view fee details.
-                      </div>
-                    )}
-                  </div>
+              <div className="flex">
+                <div className="flex">Monthly Fee <b className='ml-1'> Rs.{new Intl.NumberFormat().format(feeStudent.monthlyfee)}/-</b></div>
+              </div>
+
+              <div className='flex space-x-2'>
+                <select className='base__select px-3' onChange={handleFilterChange} name='class'>
+                  <option value="">Select a class...</option>
+                  {feeStudent.classes.map((c) => (
+                    <option value={c.class}>{c.class}</option>
+                  ))}
+                </select>
+
+                <select className='base__select px-3' onChange={handleFilterChange} name='session'>
+                  <option value="">Select Session</option>
+                  {feeStudent.classes.map((c) => (
+                    <option value={c.session}>{c.session}</option>
+                  ))}
+                </select>
+                <button onClick={fetchFees} className='base__button'>View</button>
+                <button disabled={!filters.class || !filters.session} onClick={handleReceipt} className='base__button'>Receipt</button>
+              </div>
+              <div className='flex border border-gray-200 rounded-xl p-2 shadow'>
+                <div className="flex flex-col flex-1 space-y-2">
+                  {datesForFeeDetail.map((date, i) => (
+                    <FeeItem key={date + i} date={date} i={i + 1} studentId={feeStudent._id} classes={filters.class} session={filters.session} />
+                  ))}
+                  {(!filters.class || !filters.session) && (
+                    <div className="flex p-3 text-xl font-roboto text-gray-500">
+                      Select class and session to view fee details.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-
           </div>
+
 
         </div >
       </div >
@@ -265,15 +264,15 @@ const FeeItem = ({ date, i, studentId, classes, session }) => {
     }
   }
 
-  return date?(
+  return date ? (
     <div className={`flex animate-slow p-3 group rounded-lg shadow border border-gray-200 items-center justify-between ${fee && Object.keys(fee).length > 0 ? 'bg-green-100' : 'bg-gray-100'}`}>
-      <div className="flex space-x-2 items-center">
+      <div className="flex gap-1 items-center">
         <div className='font-roboto text-gray-700'>{i}.</div>
         <div className='text-sm font-roboto'>{getMonthName(date.split('-')[1])}</div>
-        <div className='text-md text-gray-600'>Rs.{fee?.feeamount}/-</div>
+        <div className='text-md text-gray-600'>Rs.{fee?.feeamount && new Intl.NumberFormat().format(fee?.feeamount)}/-</div>
         <div className={`${fee?.remainings > 0 ? 'text-red-500' : 'text-gray-500'} text-xs`}>Remainings: {fee?.remainings}</div>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 flex-col items-center justify-center">
         <div className='text-xs text-gray-500'>{fee?.class?.title}</div>
         <div className='text-xs text-gray-500'>{fee?.class?.session}</div>
       </div>
@@ -286,7 +285,7 @@ const FeeItem = ({ date, i, studentId, classes, session }) => {
         </div>
       </div>
     </div>
-  ):(
+  ) : (
     <div className={`flex animate-slow p-3 h-14 animate-pulse group rounded-lg shadow border border-gray-200 items-center justify-between bg-gray-200`}>
     </div>
   )
