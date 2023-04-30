@@ -27,8 +27,8 @@ const Navbar = ({ }) => {
       </div>
       <div className="flex relative">
         <div onClick={()=> setShowemployeemenu(prev=> !prev)} className="flex  items-center text-gray-500 hover:border-gray-400 hover:text-gray-700 space-x-3 cursor-pointer border border-gray-200 active:bg-opacity-10 p-1 pr-2 rounded-3xl">
-          <img className='h-9 w-9 rounded-full bg-white object-cover shadow' src={employee.picture?employee.picture:'/avatar.png'} alt="" />
-          <span className='font-roboto'>{employee.name}</span>
+          <img className='h-7 w-7 md:h-9 md:w-9 rounded-full bg-white object-cover shadow' src={employee.picture?employee.picture:'/avatar.png'} alt="" />
+          <span className='font-roboto text-sm md:text-md'>{employee.name}</span>
           <div className=''>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

@@ -31,6 +31,25 @@ async function handler(req, res) {
                     }
                 }).sort({ createdAt: -1 }).limit(items).skip(items * page)
 
+            }else if (req.query.class && req.query.session) {
+
+                total = await StudentFee.countDocuments({
+                    campus: req.query.campus,
+                    class: {
+                        title: req.query.class,
+                        session: req.query.session
+                    }
+                })
+
+                fees = await StudentFee.find({
+                    campus: req.query.campus,
+                    class: {
+                        title: req.query.class,
+                        session: req.query.session
+                    }
+                }).sort({ createdAt: -1 }).limit(items).skip(items * page)
+                
+
             } else if (req.query.limit) {
 
                 fees = await StudentFee.find({

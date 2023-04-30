@@ -15,16 +15,18 @@ import { ClipLoader } from 'react-spinners'
 const fees = () => {
     const [fees, setFees] = useState([])
     const [total, setTotal] = useState({})
-    const {employee} = useContext(AuthContext)
+    const { employee, classes } = useContext(AuthContext)
     const [currentPage, setCurrentPage] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
+    const [fClass, setFClass] = useState('')
+    const [fSession, setFSession] = useState('')
     const [filters, setFilters] = useState({
         startedDate: '',
         endedDate: ''
     })
     const router = useRouter()
 
-    if(!employee.isAdmin){
+    if (!employee.isAdmin) {
         router.back()
     }
 
@@ -37,6 +39,8 @@ const fees = () => {
         try {
             if (filters.startedDate !== '' && filters.endedDate !== '' && !ignoreDates) {
                 res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
+            }else if(fClass && fSession && !ignoreDates){
+                res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}&class=${fClass}&session=${fSession}`)
             } else {
                 res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}`)
             }
@@ -63,7 +67,9 @@ const fees = () => {
             let res = {};
             if (filters.startedDate !== '' && filters.endedDate !== '') {
                 res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
-            } else {
+            }else if(fClass && fSession){
+                res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}&class=${fClass}&session=${fSession}`)
+            } else{
                 res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}`)
             }
             setFees([...fees, ...res.data.fees])
@@ -95,11 +101,21 @@ const fees = () => {
         fetchFees()
     }
 
-    const handleClear = ()=>{
-        setFilters({
-            startedDate: '',
-            endedDate: ''
-        })
+    const handleFilterByClass = () => {
+        if(fClass === '' || fSession === '') return
+        fetchFees()
+    }
+
+    const handleClear = () => {
+        if(filters.startedDate !== '' || filters.endedDate !== ''){
+            setFilters({
+                startedDate: '',
+                endedDate: ''
+            })
+        }else{
+            setFClass('')
+            setFSession('')
+        }
         fetchFees(true)
     }
 
@@ -121,16 +137,42 @@ const fees = () => {
                                 <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
                                     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                                         <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                                            <div className="flex gap-3 items-center">
+                                            <div className="flex gap-3 items-center flex-wrap">
                                                 <input onChange={handleChange} value={filters.startedDate} name='startedDate' type="date" className='base__input py-[5px] px-3 mt-0 border-gray-100 bg-white text-sm' />
                                                 <input onChange={handleChange} value={filters.endedDate} name='endedDate' type="date" className='base__input py-[5px] px-3 mt-0 border-gray-100 bg-white text-sm' />
                                                 <button className="base__button px-3 text-sm" onClick={handleFilterApply}>Apply</button>
-
                                                 {filters.startedDate !== '' && filters.endedDate !== '' && <div onClick={handleClear} className='flex p-1 bg-gray-100 rounded-full shadow cursor-pointer hover:scale-125 transition-all duration-300'>
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                     </svg>
                                                 </div>}
+                                                <div className='flex items-center gap-3 flex-wrap'>
+                                                    <select onChange={(e) => setFClass(e.target.value)} value={fClass} className='base__select bg-white px-3 text-sm'>
+                                                        <option value="">Select a class...</option>
+                                                        {classes.map((c, i) => (
+                                                            <option key={i} value={c.title}>{c.title}</option>
+                                                        ))}
+                                                    </select>
+
+                                                    <select onChange={(e) => setFSession(e.target.value)} value={fSession} className='base__select bg-white px-3 text-sm'>
+                                                        <option value="">Select Session</option>
+                                                        <option value="2023-2024">2023-2024</option>
+                                                        <option value="2024-2025">2024-2025</option>
+                                                        <option value="2025-2026">2025-2026</option>
+                                                        <option value="2026-2027">2026-2027</option>
+                                                        <option value="2027-2028">2027-2028</option>
+                                                        <option value="2028-2029">2028-2029</option>
+                                                        <option value="2029-2030">2029-2030</option>
+                                                        <option value="2030-2031">2030-2031</option>
+                                                    </select>
+
+                                                    <button onClick={handleFilterByClass} className='base__button px-3 text-sm'>Apply</button>
+                                                    {fClass !== '' && fSession !== '' && <div onClick={handleClear} className='flex p-1 bg-gray-100 rounded-full shadow cursor-pointer hover:scale-125 transition-all duration-300'>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </div>}
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="">
@@ -162,6 +204,8 @@ const fees = () => {
 
                                                 <tr>
                                                     <td className="px-4 py-3 text-lg">Total</td>
+                                                    <td className="px-4 py-3"></td>
+                                                    <td className="px-4 py-3"></td>
                                                     <td className="px-4 py-3"></td>
                                                     <td className="px-4 py-3 text-lg"><b>Rs.{new Intl.NumberFormat().format(getFeeSum(fees))}</b></td>
                                                 </tr>

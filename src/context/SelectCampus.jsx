@@ -5,7 +5,7 @@ import React, { useContext, useState } from 'react'
 import { AuthContext } from './authcontext/AuthContext'
 
 const SelectCampus = ({setEmployee, employee, localCampus, setLocalCampus}) => {
-    const [campus, setCampus] = useState([])
+    const [campus, setCampus] = useState('')
     const {campuses} = useContext(AuthContext)
 
     const handleLogout = ()=>{
@@ -17,8 +17,10 @@ const SelectCampus = ({setEmployee, employee, localCampus, setLocalCampus}) => {
     }
 
     const handleContinue = () => {
-        localStorage.setItem('campus', campus)
-        setLocalCampus(campus)
+        if(campus){
+            localStorage.setItem('campus', campus)
+            setLocalCampus(campus)
+        }
     }
 
     return (

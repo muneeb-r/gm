@@ -149,9 +149,10 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
             <div className='flex flex-col gap-3 w-1/3 '>
               <div className="flex border border-gray-200 rounded-xl py-3 px-3 flex-col items-center shadow">
                 <div className=''>
-                  <img className='h-[190px] max-w-[250px] object-cover rounded' src={feeStudent.picture} alt={feeStudent.name} />
+                  <img className='h-[190px] max-w-[250px] object-cover rounded' src={feeStudent.picture?feeStudent.picture:'/avatar.png'} alt={feeStudent.name} />
                 </div>
                 <div className='mt-3 text-center font-roboto text-gray-800'>{feeStudent.name}</div>
+                <div className='mt-1 text-center text-sm font-roboto text-gray-700'>{feeStudent.fathername}</div>
               </div>
 
               <div className="flex border border-gray-200 rounded-xl px-3 py-3 shadow">

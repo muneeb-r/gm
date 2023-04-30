@@ -59,7 +59,7 @@ const AuthProvider = ({ children }) => {
             {Object.keys(employee).length !== 0 && router.asPath !== '/login' && employee.isAdmin && !localCampus && (
                 <SelectCampus localCampus={localCampus} setLocalCampus={setLocalCampus} employee={employee} setEmployee={setEmployee} />
             )}
-            {Object.keys(employee).length !== 0 ? localCampus && children : (
+            {Object.keys(employee).length !== 0 ? localCampus && children : router.asPath !== '/login' && (
                 <>
                     <Head>
                         <title>loading...</title>

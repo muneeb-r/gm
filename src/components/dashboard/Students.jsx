@@ -17,7 +17,7 @@ const Students = () => {
         <hr className='mx-3' />
         <div className="flex p-3 flex-col gap-1">
             {studentsList.map((student, i) => (
-                <Student student={student} key={student._id} />
+                <Student student={student} key={student._id+i.toString()} />
             ))}
         </div>
     </div>

@@ -15,8 +15,8 @@ const links = [
     },
     {
         title: 'Students',
-        svg: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+        svg: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
         </svg>
         ,
         link: '/students',
@@ -30,6 +30,16 @@ const links = [
         ,
         link: '/fees',
         onlyForAdmin: true
+    },
+    {
+        title: 'Missing Fees',
+        svg: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      
+        ,
+        link: '/missingfees',
+        onlyForAdmin: false
     },
     {
         title: 'Expenses',
@@ -71,27 +81,28 @@ const links = [
 
 const Sidebar = ({ currentPage }) => {
     const { togglesidebarondesktop, employee } = useContext(AuthContext)
+
     return (
-        <div className={`${togglesidebarondesktop ? 'w-20' : 'w-64'} transition-all duration-300 h-[calc(100vh-60px)] sticky top-[60px] z-10 hidden lg:block border-r border-gray-200`}>
+        <div className={`md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-60px)] fixed lg:sticky top-[60px] z-10 border-r border-gray-200`}>
             <div className='relative w-full h-full'>
                 {/* <img className='w-full h-full -z-50' src="/bg.jpg" alt="" /> */}
                 <div className='bg-white absolute top-0 w-full h-[calc(100vh-60px)] z-50'>
                     <h1 className='m-3 text-white text-lg font-roboto hidden'>Menu</h1>
-                    <div className="flex pr-2 mt-5 flex-col space-y-3">
+                    <div className="flex pr-2 mt-5 flex-col gap-2">
                         {links.map((link, index) => employee.isAdmin ? (
                             <Link href={link.link} key={index}>
-                                <div className={`flex relative rounded-r-full gap-3 px-3 py-3 hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
-                                    {currentPage === link.title && <div className='absolute top-2 left-0 h-8 w-1 rounded-r-md shadow bg-orange-500'></div>}
+                                <div className={`relative rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
+                                    {currentPage === link.title && <div className='absolute top-2 left-0 h-6 md:h-8 w-1 rounded-r-md shadow bg-orange-500'></div>}
                                     <div className={`text-black  ${currentPage === link.title && 'text-orange-500'}`}>{link.svg}</div>
-                                    <div className={`text-black transition-all duration-300 font-medium ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
+                                    <div className={`text-black  hidden lg:block transition-all duration-300 font-medium min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
                                 </div>
                             </Link>
                         ) : !link.onlyForAdmin && (
                             <Link href={link.link} key={index}>
-                                <div className={`flex relative rounded-r-full gap-3 px-3 py-3 hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
+                                <div className={` relative rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
                                     {currentPage === link.title && <div className='absolute top-2 left-0 h-8 w-1 rounded-r-md shadow bg-orange-500'></div>}
                                     <div className={`text-black  ${currentPage === link.title && 'text-orange-500'}`}>{link.svg}</div>
-                                    <div className={`text-black transition-all duration-300 ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
+                                    <div className={`text-black hidden md:block transition-all duration-300 min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
                                 </div>
                             </Link>
                         )

@@ -42,7 +42,7 @@ export default function Home() {
                 <div className="flex">
                     <Sidebar currentPage='Employees' />
                     <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5">
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center flex-wrap gap-3">
                             <div className="flex">
                                 <div className="flex">
                                     <input type="search" placeholder='Search' className='base__search' />

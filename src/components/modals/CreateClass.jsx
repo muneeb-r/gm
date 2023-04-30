@@ -63,7 +63,7 @@ const CreateClass = ({ setShowCreateClass, setClasses }) => {
                                     <Field className='base__input' as="select" id="campus" name="campus">
                                         <option value="">Select a campus</option>
                                         {campuses.map((c) => (
-                                            <option value={c.title}>{c.title}</option>
+                                            <option key={c} value={c.title}>{c.title}</option>
                                         ))}                                    </Field>
                                     <p className='form__error'><ErrorMessage name="campus" /></p>
                                 </div>

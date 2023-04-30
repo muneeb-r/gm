@@ -5,14 +5,15 @@ import Sidebar from '@/components/sidebar/Sidebar'
 import { AuthContext } from '@/context/authcontext/AuthContext'
 import axios from 'axios'
 import Head from 'next/head'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
 
 
 const settings = () => {
     const [showCreateCampus, setShowCreateCampus] = useState(false)
     const [showCreateClass, setShowCreateClass] = useState(false)
-    const { classes, setClasses, campuses, setCampuses } = useContext(AuthContext)
+    const { classes:allClasses, setClasses:setAllClasses, campuses, setCampuses } = useContext(AuthContext)
+    const [classes, setClasses] = useState(allClasses)
 
     const handleClassDelete = async (classId) => {
         try {
