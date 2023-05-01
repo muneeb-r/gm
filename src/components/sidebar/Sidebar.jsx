@@ -1,6 +1,6 @@
 import { AuthContext } from '@/context/authcontext/AuthContext'
 import Link from 'next/link'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 const links = [
     {
@@ -34,9 +34,9 @@ const links = [
     {
         title: 'Missing Fees',
         svg: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+
         ,
         link: '/missingfees',
         onlyForAdmin: false
@@ -47,7 +47,7 @@ const links = [
             <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
         </svg>
         ,
-        link: '/',
+        link: '/expense',
         onlyForAdmin: false
     },
     {
@@ -81,17 +81,26 @@ const links = [
 
 const Sidebar = ({ currentPage }) => {
     const { togglesidebarondesktop, employee } = useContext(AuthContext)
+    const [filteredLinks, setfilteredLinks] = useState(links)
+
+    const handleSearch = (e)=>{
+        const {value} = e.target
+        setfilteredLinks(links.filter(link => link.title.toLowerCase().includes(value.toLowerCase())))
+    }
+
 
     return (
         <div className={`md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-60px)] fixed lg:sticky top-[60px] z-10 border-r border-gray-200`}>
             <div className='relative w-full h-full'>
                 {/* <img className='w-full h-full -z-50' src="/bg.jpg" alt="" /> */}
-                <div className='bg-white absolute top-0 w-full h-[calc(100vh-60px)] z-50'>
-                    <h1 className='m-3 text-white text-lg font-roboto hidden'>Menu</h1>
+                <div className='bg-white absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
+                    <div className={`justify-center m-2 hidden lg:flex ${togglesidebarondesktop ? 'opacity-0 h-0': 'opacity-100 h-auto'}  transition-all duration-300`}>
+                        <input onChange={handleSearch} type="text" placeholder='Search...' className='base__search flex-1 shadow-none bg-white' />
+                    </div>
                     <div className="flex pr-2 mt-5 flex-col gap-2">
-                        {links.map((link, index) => employee.isAdmin ? (
+                        {filteredLinks.map((link, index) => employee.isAdmin ? (
                             <Link href={link.link} key={index}>
-                                <div className={`relative rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
+                                <div className={`relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
                                     {currentPage === link.title && <div className='absolute top-2 left-0 h-6 md:h-8 w-1 rounded-r-md shadow bg-orange-500'></div>}
                                     <div className={`text-black  ${currentPage === link.title && 'text-orange-500'}`}>{link.svg}</div>
                                     <div className={`text-black  hidden lg:block transition-all duration-300 font-medium min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
@@ -99,15 +108,16 @@ const Sidebar = ({ currentPage }) => {
                             </Link>
                         ) : !link.onlyForAdmin && (
                             <Link href={link.link} key={index}>
-                                <div className={` relative rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
+                                <div className={` relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
                                     {currentPage === link.title && <div className='absolute top-2 left-0 h-8 w-1 rounded-r-md shadow bg-orange-500'></div>}
                                     <div className={`text-black  ${currentPage === link.title && 'text-orange-500'}`}>{link.svg}</div>
-                                    <div className={`text-black hidden md:block transition-all duration-300 min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
+                                    <div className={`text-black hidden md:block font-medium transition-all duration-300 min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
                                 </div>
                             </Link>
                         )
                         )}
                     </div>
+                    {filteredLinks.length===0&&<p className="text-gray-700 m-3 animate-opacity">Sorry, no results found.</p>}
                     {/* <hr className="my-3 mx-2" />
                     <div className="flex mx-2 text-white font-roboto">
                         {localStorage.getItem('campus')}
