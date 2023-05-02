@@ -63,16 +63,16 @@ export default function Home() {
     }
   }
 
-  const handleChange = async (event) => {
-    const { name, value } = event.target
-    setStudentFilters({ ...studentFilters, [name]: value })
-  }
-
   useEffect(() => {
     getNumberOfStudents()
     fetchStudentsStats(filterType)
   }, [])
-
+  
+  const handleChange = async (event) => {
+    const { name, value } = event.target
+    setStudentFilters({ ...studentFilters, [name]: value })
+  }
+  
   const handeTypeChange = (e) => {
     setFilterType(e.target.value)
     fetchStudentsStats(e.target.value)

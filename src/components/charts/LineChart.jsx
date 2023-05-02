@@ -44,7 +44,7 @@ const LineChart = ({ title, xData, yData }) => {
         data={{
           labels: xData,
           datasets: [
-            {
+            {fill: true,
               label: 'Students',
               data: yData,
               borderColor: 'rgb(255, 99, 132)',
