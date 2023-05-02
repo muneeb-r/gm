@@ -42,9 +42,8 @@ const computeMissingFees = async (student, campus) => {
         let d = date.split('-')[2] + '-' + date.split('-')[1] + '-' + date.split('-')[0]
         const givenDate = new Date(d);
         const currentDate = new Date();
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), givenDate.getDate());
 
-        if (newDate >= givenDate) {
+        if (currentDate >= givenDate) {
 
             let fee = await StudentFee.findOne({
                 campus,
