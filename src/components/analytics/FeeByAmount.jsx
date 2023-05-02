@@ -70,8 +70,8 @@ const FeeByAmount = () => {
 
   return (
     <div className='col-span-2 p-3 rounded-lg border border-gray-200 flex flex-col gap-3'>
-      <div className="flex items-center justify-between">
-        <div className="flex gap-3 items-center">
+      <div className="flex items-center justify-between flex-wrap">
+        <div className="flex gap-3 items-center flex-wrap">
           <select onChange={handeTypeChange} name="type" className='base__select bg-white px-1 text-sm'>
             <option value="day">Day</option>
             <option value="month">Month</option>
