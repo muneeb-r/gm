@@ -58,21 +58,24 @@ const Students = ({ }) => {
     }
 
     const handleDelete = async (stu) => {
-        if (prompt('Please type student name') === stu.name) {
+        const name = prompt('Please type student name')
+        if (name === stu.name.trim()) {
             try {
                 const res = await axios.delete('/api/student/delete?studentId=' + stu._id)
                 if (res.data) {
                     try {
                         await deleteFile(stu.picture)
+                        setStudents(students.filter((s) => s._id !== stu._id))
+                        toast.success(res.data.message)
                     } catch (e) { }
-                    setStudents(students.filter((s) => s._id !== stu._id))
-                    toast.success(res.data.message)
                 }
 
             } catch (error) {
                 console.log(error)
                 toast.error('Something went wrong.')
             }
+        }else{
+            toast.error('Please type student name correctly.')
         }
     }
 
@@ -253,7 +256,7 @@ const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete }) =>
                                 </div>
                                 <div>View</div>
                             </div>
-                            <div onClick={() => setFeeStudent(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
+                            <button disabled={!student.isActive} onClick={() => setFeeStudent(student)} className='flex disabled:cursor-not-allowed disabled:bg-gray-100 space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -261,7 +264,7 @@ const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete }) =>
 
                                 </div>
                                 <div>Add Fee</div>
-                            </div>
+                            </button>
                             <div onClick={() => handleDelete(student)} className='flex space-x-3 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-red-600">
