@@ -175,18 +175,6 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
                     {getMonthsBetweenDates(classForFee.started, classForFee.endingDate).map((date) => (
                       <option value={date} >{getMonthName(date.split('-')[1])} - {date.split('-')[2]}</option>
                     ))}
-                    {/* <option value="January" >January</option>
-                    <option value="February" >February</option>
-                    <option value="March" >March</option>
-                    <option value="April" >April</option>
-                    <option value="May" >May</option>
-                    <option value="June" >June</option>
-                    <option value="July" >July</option>
-                    <option value="August" >August</option>
-                    <option value="September" >September</option>
-                    <option value="October" >October</option>
-                    <option value="November" >November</option>
-                    <option value="December" >December</option> */}
                   </select>}
                   <input className='base__input' type="number" placeholder='Fee Amount' name='feeamount' value={formData.feeamount === 0 ? '' : formData.feeamount} onChange={handleChange} />
                   <input className='base__input' type="number" placeholder='Remainings (optional)' value={formData.remainings === 0 ? '' : formData.remainings} name='remainings' onChange={handleChange} />

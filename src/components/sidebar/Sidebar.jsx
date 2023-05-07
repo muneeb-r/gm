@@ -29,7 +29,7 @@ const links = [
         </svg>
         ,
         link: '/fees',
-        onlyForAdmin: true
+        onlyForAdmin: false
     },
     {
         title: 'Missing Fees',
@@ -51,12 +51,30 @@ const links = [
         onlyForAdmin: false
     },
     {
+        title: 'Inquiries',
+        svg: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5" />
+        </svg>
+        ,
+        link: '/inquiries',
+        onlyForAdmin: false
+    },
+    {
         title: 'Analytics',
         svg: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
         </svg>
         ,
         link: '/analytics',
+        onlyForAdmin: true
+    },
+    {
+        title: 'Attendance',
+        svg: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
+        </svg>
+        ,
+        link: '/attendance',
         onlyForAdmin: true
     },
     {
@@ -84,8 +102,8 @@ const Sidebar = ({ currentPage }) => {
     const { togglesidebarondesktop, employee } = useContext(AuthContext)
     const [filteredLinks, setfilteredLinks] = useState(links)
 
-    const handleSearch = (e)=>{
-        const {value} = e.target
+    const handleSearch = (e) => {
+        const { value } = e.target
         setfilteredLinks(links.filter(link => link.title.toLowerCase().includes(value.toLowerCase())))
     }
 
@@ -95,10 +113,10 @@ const Sidebar = ({ currentPage }) => {
             <div className='relative w-full h-full'>
                 {/* <img className='w-full h-full -z-50' src="/bg.jpg" alt="" /> */}
                 <div className='bg-white absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
-                    <div className={`justify-center m-2 hidden lg:flex ${togglesidebarondesktop ? 'opacity-0 h-0': 'opacity-100 h-auto'}  transition-all duration-300`}>
+                    <div className={`justify-center m-2 hidden lg:flex ${togglesidebarondesktop ? 'opacity-0 h-0' : 'opacity-100 h-auto'}  transition-all duration-300`}>
                         <input onChange={handleSearch} type="text" placeholder='Search...' className='base__search flex-1 shadow-none bg-white' />
                     </div>
-                    <div className="flex pr-2 mt-5 flex-col gap-2">
+                    <div className="flex pr-2 mt-2 flex-col gap-1">
                         {filteredLinks.map((link, index) => employee.isAdmin ? (
                             <Link href={link.link} key={index}>
                                 <div className={`relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
@@ -118,7 +136,7 @@ const Sidebar = ({ currentPage }) => {
                         )
                         )}
                     </div>
-                    {filteredLinks.length===0&&<p className="text-gray-700 m-3 animate-opacity">Sorry, no results found.</p>}
+                    {filteredLinks.length === 0 && <p className="text-gray-700 m-3 animate-opacity">Sorry, no results found.</p>}
                     {/* <hr className="my-3 mx-2" />
                     <div className="flex mx-2 text-white font-roboto">
                         {localStorage.getItem('campus')}

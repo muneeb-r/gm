@@ -42,15 +42,11 @@ const Receipt = ({ queries }) => {
         const callback = (event) => {
             var name = event.key;
             var code = event.code;
-            if (name === 'c') {
-            }
             if (name === 'k') {
                 setShowSliders(prev => !prev)
             }
         }
-
         document.addEventListener('keydown', callback, false);
-
         return () => {
             document.removeEventListener('keydown', callback, false);
         }
@@ -152,6 +148,7 @@ const ReceiptFee = ({ date, studentId, classes, session }) => {
         }
         fetchFe()
     }, [])
+    
     return (
         <div className='flex justify-between p-1 border-b border-gray-200 items-center'>
             <div className='font-semibold'>{getMonthName(date.split('-')[1])}</div>

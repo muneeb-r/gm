@@ -7,6 +7,9 @@
 .base__button {
     @apply px-4 md:px-6 py-[6px] bg-orange-500 active:scale-[0.95] duration-150 transition-all shadow text-white font-roboto flex items-center rounded-md hover:bg-orange-600 active:bg-orange-500 disabled:bg-orange-400 disabled:cursor-not-allowed;
 }
+.base__button__indigo {
+    @apply px-4 md:px-6 py-[6px] bg-indigo-500 active:scale-[0.95] duration-150 transition-all shadow text-white font-roboto flex items-center rounded-md hover:bg-indigo-600 active:bg-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed;
+}
 .base__select {
     @apply px-4 md:px-6 py-[6px] rounded-md bg-gray-50 duration-150 transition-all text-black shadow hover:bg-gray-100 active:bg-gray-200 outline-none cursor-pointer border border-gray-100;
 }

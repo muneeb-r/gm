@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
+import { getDatabase} from "firebase/database";
 
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
     apiKey: "AIzaSyBehvmXg4RPEHPw2RZ-nN0PmXUGSYzzr-4",
     authDomain: "brew-crew-7b2c8.firebaseapp.com",
@@ -14,5 +13,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-
 export const storage = getStorage(app);
+export const database = getDatabase(app);

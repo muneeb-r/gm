@@ -65,9 +65,9 @@ const Students = ({ }) => {
                 if (res.data) {
                     try {
                         await deleteFile(stu.picture)
-                        setStudents(students.filter((s) => s._id !== stu._id))
-                        toast.success(res.data.message)
                     } catch (e) { }
+                    setStudents(students.filter((s) => s._id !== stu._id))
+                    toast.success(res.data.message)
                 }
 
             } catch (error) {

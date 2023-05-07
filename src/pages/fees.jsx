@@ -1,8 +1,10 @@
+import CreateMultipleFees from '@/components/modals/CreateMultipleFees'
 import Navbar from '@/components/nav/Navbar'
 import Sidebar from '@/components/sidebar/Sidebar'
 import { AuthContext } from '@/context/authcontext/AuthContext'
 import { authenticate } from '@/utils/authenticate'
 import { fetchStudent } from '@/utils/fetchStudent'
+import { getMonthName } from '@/utils/getMonth'
 import axios from 'axios'
 import moment from 'moment'
 import Head from 'next/head'
@@ -13,9 +15,7 @@ import { ClipLoader } from 'react-spinners'
 
 
 const fees = () => {
-    const [fees, setFees] = useState([])
-    const [total, setTotal] = useState({})
-    const { employee, classes } = useContext(AuthContext)
+    const { employee, classes, setFees, fees, total, setTotal} = useContext(AuthContext)
     const [currentPage, setCurrentPage] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
     const [fClass, setFClass] = useState('')
@@ -24,6 +24,7 @@ const fees = () => {
         startedDate: '',
         endedDate: ''
     })
+    const [showCreateMultipleFees, setShowCreateMultipleFees] = useState(false)
     const router = useRouter()
 
     if (!employee.isAdmin) {
@@ -39,7 +40,7 @@ const fees = () => {
         try {
             if (filters.startedDate !== '' && filters.endedDate !== '' && !ignoreDates) {
                 res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
-            }else if(fClass && fSession && !ignoreDates){
+            } else if (fClass && fSession && !ignoreDates) {
                 res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}&class=${fClass}&session=${fSession}`)
             } else {
                 res = await axios.get(`/api/studentfee/get?campus=${localStorage.getItem('campus')}`)
@@ -67,9 +68,9 @@ const fees = () => {
             let res = {};
             if (filters.startedDate !== '' && filters.endedDate !== '') {
                 res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
-            }else if(fClass && fSession){
+            } else if (fClass && fSession) {
                 res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}&class=${fClass}&session=${fSession}`)
-            } else{
+            } else {
                 res = await axios.get(`/api/studentfee/get?page=${currentPage}&campus=${localStorage.getItem('campus')}`)
             }
             setFees([...fees, ...res.data.fees])
@@ -102,17 +103,17 @@ const fees = () => {
     }
 
     const handleFilterByClass = () => {
-        if(fClass === '' || fSession === '') return
+        if (fClass === '' || fSession === '') return
         fetchFees()
     }
 
     const handleClear = () => {
-        if(filters.startedDate !== '' || filters.endedDate !== ''){
+        if (filters.startedDate !== '' || filters.endedDate !== '') {
             setFilters({
                 startedDate: '',
                 endedDate: ''
             })
-        }else{
+        } else {
             setFClass('')
             setFSession('')
         }
@@ -131,7 +132,22 @@ const fees = () => {
                 <Navbar />
                 <div className="flex">
                     <Sidebar currentPage={'Fees'} />
-                    <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5">
+                    <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5 gap-2">
+                        <div className="flex">
+                            <div className="shadow rounded-md">
+                                <button onClick={()=> setShowCreateMultipleFees(true)} className='base__button px-3 gap-2 shadow-inner shadow-orange-300'>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+
+                                    </span>
+                                    <span>
+                                        Add Fees
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
                         <section className="bg-gray-50 border border-gray-100 rounded-md">
                             <div className="mx-auto max-w-screen-xl">
                                 <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
@@ -168,10 +184,10 @@ const fees = () => {
 
                                                     <button onClick={handleFilterByClass} className='base__button px-3 text-sm'>Apply</button>
                                                     {fClass !== '' && fSession !== '' && <div onClick={handleClear} className='flex p-1 bg-gray-100 rounded-full shadow cursor-pointer hover:scale-125 transition-all duration-300'>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                </div>}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </div>}
                                                 </div>
                                             </div>
                                         </div>
@@ -187,11 +203,11 @@ const fees = () => {
                                                     <th scope="col" className="px-4 py-3">Student</th>
                                                     <th scope="col" className="px-4 py-3">Father</th>
                                                     <th scope="col" className="px-4 py-3">Class</th>
+                                                    <th scope="col" className="px-4 py-3">Month</th>
                                                     <th scope="col" className="px-4 py-3">Amount</th>
                                                     <th scope="col" className="px-4 py-3">Remainings</th>
-                                                    <th scope="col" className="px-4 py-3">Created At</th>
+                                                    <th scope="col" className="px-3 py-3">Created At</th>
                                                     <th scope="col" className="px-4 py-3">Rn</th>
-                                                    {/* <th scope="col" className="px-4 py-3"></th> */}
                                                     <th scope="col" className="px-4 py-3">
                                                         <span className="sr-only">Actions</span>
                                                     </th>
@@ -204,6 +220,7 @@ const fees = () => {
 
                                                 <tr>
                                                     <td className="px-4 py-3 text-lg">Total</td>
+                                                    <td className="px-4 py-3"></td>
                                                     <td className="px-4 py-3"></td>
                                                     <td className="px-4 py-3"></td>
                                                     <td className="px-4 py-3"></td>
@@ -228,7 +245,7 @@ const fees = () => {
                         </section>
                     </div>
                 </div>
-
+                {showCreateMultipleFees && <CreateMultipleFees setShowCreateMultipleFees={setShowCreateMultipleFees} />}
             </main>
         </div>
     )
@@ -266,13 +283,14 @@ const FeeRow = ({ fee, i }) => {
             </td>
             <td className="px-4 py-3">{student.fathername}</td>
             <td className="px-4 py-3">{fee.class.title}</td>
+            <td className="px-4 py-3">{getMonthName(fee.month.split('-')[1])}</td>
             <td className="px-4 py-3">{new Intl.NumberFormat().format(fee.feeamount)}</td>
             <td className="px-4 py-3">{fee.remainings}</td>
-            <td className="px-4 py-3">{moment(fee?.createdAt).format('L')}</td>
+            <td className="px-3 py-3 text-sm">{moment(fee?.createdAt).format('L')}</td>
             <td className="px-4 py-3">{student.rn}</td>
             <td className="px-4 py-3 flex items-center justify-end">
                 <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
-                    <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                     </svg>
                 </button>

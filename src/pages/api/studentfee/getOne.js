@@ -5,14 +5,21 @@ async function handler(req, res) {
 
     if (req.method === 'GET') {
         try {
-            const fees = await StudentFee.findOne({
-                month: req.query.month,
-                studentId: req.query.studentId,
-                class: {
-                    title: req.query.class,
-                    session: req.query.session
-                },
-            })
+            let fees = {}
+            if (req.query.getLast) {
+                fees = await StudentFee.findOne({
+                    studentId: req.query.studentId
+                }).sort({createdAt: -1})
+            } else {
+                fees = await StudentFee.findOne({
+                    month: req.query.month,
+                    studentId: req.query.studentId,
+                    class: {
+                        title: req.query.class,
+                        session: req.query.session
+                    },
+                })
+            }
 
             res.status(200).json(fees)
 

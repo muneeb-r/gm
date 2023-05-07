@@ -1,12 +1,12 @@
 import connectDB from "@/middleware/mongoos"
-import Expense from "@/models/expense"
+import Inquiry from "@/models/inquiries"
 
 async function handler(req, res) {
 
     if (req.method === 'DELETE') {
-        await Expense.findByIdAndDelete(req.query.expenseId)
+        await Inquiry.findByIdAndDelete(req.query.inquiryId)
         res.status(200).json({
-            message: 'Expense has been deleted.'
+            message: 'Fee has been deleted.'
         })
     }
 

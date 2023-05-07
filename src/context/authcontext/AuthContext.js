@@ -15,6 +15,9 @@ const AuthProvider = ({ children }) => {
     const [localCampus, setLocalCampus] = useState('')
     const [campuses, setCampuses] = useState([])
     const [classes, setClasses] = useState([])
+    const [fees, setFees] = useState([])
+    const [total, setTotal] = useState({})
+
 
     const decodeEmployee = async (token) => {
         if (!token) return
@@ -52,7 +55,8 @@ const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             employee, setEmployee, decodeEmployee,
-            togglesidebarondesktop, setTogglesidebarondesktop, setLocalCampus, campuses, setCampuses, classes, setClasses
+            togglesidebarondesktop, setTogglesidebarondesktop, setLocalCampus, campuses, setCampuses, classes, setClasses,
+            setFees, fees, total, setTotal
         }}>
 
             {router.asPath === '/login' && children}
