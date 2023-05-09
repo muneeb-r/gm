@@ -160,7 +160,7 @@ const AddFee = ({ setFeeStudent, feeStudent }) => {
                   <select className='base__select' onChange={handleChange} value={formData.class} name='class'>
                     <option value="">Select a class...</option>
                     {feeStudent.classes.map((c) => (
-                      <option value={c.class}>{c.class}</option>
+                      <option key={c.class} value={c.class}>{c.class}</option>
                     ))}
                   </select>
 

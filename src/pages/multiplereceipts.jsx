@@ -168,7 +168,7 @@ const Student = ({ student, gap }) => {
     }, [])
 
     return (
-        <div className={`flex justify-between p-1 py-2 border-b border-gray-200 items-center`} style={{gap: gap.toString()+'px'}}>
+        <div className={`flex justify-between p-1 py-2 border-b border-gray-200 items-center`} style={{gap: `${gap}px`}}>
             <div className="flex gap-2 items-center">
                 <img className='w-10 h-10 rounded object-cover' src={student.picture ? student.picture : '/avatar.png'} alt={student.name} />
                 <div className="flex flex-col">

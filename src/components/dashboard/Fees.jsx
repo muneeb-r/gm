@@ -54,7 +54,7 @@ const FeeItem = ({ fee }) => {
         <span className='text-xs mt-1 text-gray-500'>{fee.class.session}</span>
       </div>
       <div>
-        <span className='bg-green-100 p-2 py-1 text-sm rounded text-green font-roboto shadow'>Rs.3000</span>
+        <span className='bg-green-100 p-2 py-1 text-sm rounded text-green font-roboto shadow'>Rs.{new Intl.NumberFormat().format(fee.feeamount)}/-</span>
       </div>
     </div>
   ) : (

@@ -61,46 +61,51 @@ const CreateAttendance = ({ setShowCreateAttendance }) => {
                         }}
                         validationSchema={teacherSchema}
                         onSubmit={(values, { resetForm }) => {
+                            if(!id) return toast.error('ID is unavailable');
+
+                            const loading = toast.loading('loading...')
                             const date = new Date(values.date).getFullYear().toString()
 
                             set(ref(database, 'attendance/'+date+'/'+id+'/'), {
                                 ...values,
-                                date
+                                date,
+                                active: "yes",
+                                id
                               });
                             set(ref(database, 'Register'), '');
-                              
+                            toast.success('Employee successfully registered.', {id: loading})
                             resetForm();
                         }}
                     >
                         {({ errors, touched, setFieldValue }) => (
                             <Form className='w-full flex flex-col gap-3'>
                                 <div className='flex flex-col'>
-                                    <label htmlFor="id">ID</label>
-                                    <Field className='base__input' disabled value={id} type="text" name="id" />
-                                    <ErrorMessage name="id" />
+                                    <label className='font-medium' htmlFor="id">ID</label>
+                                    <Field className='base__input disabled:opacity-50' disabled value={id} type="text" name="id" />
+                                    <p className="form__error"><ErrorMessage name="id" /></p>
                                 </div>
                                 <div className='flex flex-col'>
-                                    <label htmlFor="name">Name</label>
+                                    <label className='font-medium' htmlFor="name">Name</label>
                                     <Field className='base__input' type="text" name="name" />
-                                    <ErrorMessage name="name" />
+                                    <p className="form__error"><ErrorMessage name="name" /></p>
                                 </div>
                                 <div className='flex flex-col'>
-                                    <label htmlFor="cnic">CNIC</label>
+                                    <label className='font-medium' htmlFor="cnic">CNIC</label>
                                     <Field className='base__input' type="text" name="cnic" />
-                                    <ErrorMessage name="cnic" />
+                                    <p className="form__error"><ErrorMessage name="cnic" /></p>
                                 </div>
                                 <div className='flex flex-col'>
-                                    <label htmlFor="age">Age</label>
+                                    <label className='font-medium' htmlFor="age">Age</label>
                                     <Field className='base__input' type="number" name="age" />
-                                    <ErrorMessage name="age" />
+                                    <p className="form__error"><ErrorMessage name="age" /></p>
                                 </div>
                                 <div className='flex flex-col'>
-                                    <label htmlFor="qualification">Qualification</label>
+                                    <label className='font-medium' htmlFor="qualification">Qualification</label>
                                     <Field className='base__input' type="text" name="qualification" />
-                                    <ErrorMessage name="qualification" />
+                                    <p className="form__error"><ErrorMessage name="qualification" /></p>
                                 </div>
                                 <div className='flex flex-col'>
-                                    <label htmlFor="date">Date</label>
+                                    <label className='font-medium' htmlFor="date">Date</label>
                                     <Field className='base__input'
                                         type="date"
                                         name="date"
@@ -109,7 +114,7 @@ const CreateAttendance = ({ setShowCreateAttendance }) => {
                                         }}
                                     />
                                     {touched.date && errors.date && (
-                                        <div className="error">{errors.date}</div>
+                                        <div className="form__error">{errors.date}</div>
                                     )}
                                 </div>
                                 <div>
