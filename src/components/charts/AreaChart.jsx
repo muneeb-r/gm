@@ -24,7 +24,7 @@ ChartJS.register(
 );
 
 
-export function AreaChart({title, xData, yData, borderColor, backgroundColor }) {
+export function AreaChart({ title, xData, yData, borderColor, backgroundColor }) {
 
     return <Line height={'350'} options={{
         responsive: true,
@@ -35,11 +35,11 @@ export function AreaChart({title, xData, yData, borderColor, backgroundColor }) 
             title: {
                 display: true,
                 text: title,
-            },
+            }
         },
         maintainAspectRatio: false
-    }} data = {{
-    labels: xData,
+    }} data={{
+        labels: xData,
         datasets: [
             {
                 fill: true,
@@ -49,5 +49,5 @@ export function AreaChart({title, xData, yData, borderColor, backgroundColor }) 
                 backgroundColor,
             },
         ],
-  }} />;
+    }} />;
 }

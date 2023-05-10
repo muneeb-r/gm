@@ -118,7 +118,7 @@ const Attendance = () => {
                     </div>
                 </div>
                 {showCreateAttendance && <CreateAttendance setShowCreateAttendance={setShowCreateAttendance} />}
-                {Object.keys(employee).length>0&& <View setEmployee={setEmployee} employee={employee} />}
+                {Object.keys(employee).length>0&& <View setEmployee={setEmployee} employee={employee} year={filters} />}
             </main>
         </div>
     )
