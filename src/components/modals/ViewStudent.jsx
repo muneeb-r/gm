@@ -11,17 +11,17 @@ import { deleteFile } from '@/utils/deleteFile';
 const studentSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     fathername: Yup.string().required("Father's name is required"),
-    fathercnic: Yup.string().required("Father's CNIC is required"),
+    fathercnic: Yup.string(),
     bayformnumber: Yup.string(),
     address: Yup.string(),
     whatsappnumber: Yup.number(),
-    phonenumber: Yup.number().required('Its required!'),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    gender: Yup.string().required("Gender is required"),
-    dateofbirth: Yup.string().required("Date of birth is required"),
-    monthlyfee: Yup.number().required("Monthly fee is required"),
-    registrationfee: Yup.number().required("Registration fee is required"),
-    medium: Yup.string().required("Medium is required"),
+    phonenumber: Yup.number(),
+    email: Yup.string().email("Invalid email"),
+    gender: Yup.string(),
+    dateofbirth: Yup.string(),
+    monthlyfee: Yup.number(),
+    registrationfee: Yup.number(),
+    medium: Yup.string(),
     isActive: Yup.boolean()
 });
 

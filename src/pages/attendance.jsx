@@ -1,3 +1,4 @@
+import View from '@/components/attendance/View'
 import CreateAttendance from '@/components/modals/CreateAttendance'
 import Navbar from '@/components/nav/Navbar'
 import Sidebar from '@/components/sidebar/Sidebar'
@@ -14,6 +15,7 @@ const Attendance = () => {
     const [showCreateAttendance, setShowCreateAttendance] = useState(false)
     const [filters, setFilters] = useState(new Date().getFullYear())
     const [employees, setEmployees] = useState([])
+    const [employee, setEmployee] = useState({})
 
     const fetchEmployees = async () => {
         setIsLoading(true)
@@ -97,7 +99,7 @@ const Attendance = () => {
                                             </thead>
                                             <tbody>
                                                 {employees?.map((employee, i) => (
-                                                    <EmployeeRow employee={employee} key={employee.name + i.toString()} i={i + 1} />
+                                                    <EmployeeRow setEmployee={setEmployee} employee={employee} key={employee.name + i.toString()} i={i + 1} />
                                                 ))}
                                             </tbody>
                                         </table>
@@ -116,6 +118,7 @@ const Attendance = () => {
                     </div>
                 </div>
                 {showCreateAttendance && <CreateAttendance setShowCreateAttendance={setShowCreateAttendance} />}
+                {Object.keys(employee).length>0&& <View setEmployee={setEmployee} employee={employee} />}
             </main>
         </div>
     )
@@ -131,7 +134,7 @@ export async function getServerSideProps(context) {
     }
 }
 
-const EmployeeRow = ({ employee, i }) => {
+const EmployeeRow = ({ employee, i, setEmployee }) => {
 
     return (
         <tr className="border-b animate-slow">
@@ -147,12 +150,11 @@ const EmployeeRow = ({ employee, i }) => {
             <td className="px-4 py-3">{employee.date}</td>
             <td className="px-4 py-3 flex items-center justify-end">
                 <div className="flex">
-                    <div className='text-blue-500 cursor-pointer'>
+                    <div onClick={()=> setEmployee(employee)} className='text-blue-500 cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-
                     </div>
                 </div>
             </td>

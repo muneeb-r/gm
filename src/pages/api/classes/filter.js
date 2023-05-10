@@ -9,7 +9,7 @@ async function handler(req, res) {
     if(req.query.filter === 'all'){
         classes = await Classes.find()
     }else if(req.query.filter){
-        classes = await Classes.find({campus: req.query.filter})
+        classes = await Classes.find({campusId: req.query.filter})
     }else{
         classes = await Classes.findOne({title: req.query.title})
     }

@@ -28,6 +28,7 @@ export default function Login() {
                         if(r.employee.campus){
                             localStorage.setItem('campus', r.employee.campus)
                             setLocalCampus(r.employee.campus)
+                            fetchClasses(r.employee.campus)
                         }else {
                             return toast.error('You are neither an admin nor have a campus.', {id:loading})
                         }

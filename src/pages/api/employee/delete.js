@@ -1,12 +1,12 @@
 import connectDB from "@/middleware/mongoos"
-import Inquiry from "@/models/inquiries"
+import Employee from "@/models/employee"
 
 async function handler(req, res) {
 
     if (req.method === 'DELETE') {
-        await Inquiry.findByIdAndDelete(req.query.inquiryId)
+        await Employee.findByIdAndDelete(req.query.employeeId)
         res.status(200).json({
-            message: 'Inquiry has been deleted.'
+            message: 'Employee has been deleted.'
         })
     }
 

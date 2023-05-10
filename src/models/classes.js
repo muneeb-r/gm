@@ -5,7 +5,7 @@ const ClassesSchema = new Schema({
         type: String,
         required: true
     },
-    campus: {
+    campusId: {
         type: String,
         required: true
     }

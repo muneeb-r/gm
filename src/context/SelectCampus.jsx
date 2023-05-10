@@ -4,9 +4,9 @@ import Head from 'next/head'
 import React, { useContext, useState } from 'react'
 import { AuthContext } from './authcontext/AuthContext'
 
-const SelectCampus = ({setEmployee, employee, localCampus, setLocalCampus}) => {
+const SelectCampus = ({setEmployee, employee, setLocalCampus}) => {
     const [campus, setCampus] = useState('')
-    const {campuses} = useContext(AuthContext)
+    const {campuses, fetchClasses} = useContext(AuthContext)
 
     const handleLogout = ()=>{
         Cookies.remove('token')
@@ -20,6 +20,7 @@ const SelectCampus = ({setEmployee, employee, localCampus, setLocalCampus}) => {
         if(campus){
             localStorage.setItem('campus', campus)
             setLocalCampus(campus)
+            fetchClasses(campus)
         }
     }
 

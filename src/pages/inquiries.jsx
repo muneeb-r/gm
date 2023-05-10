@@ -1,3 +1,4 @@
+import View from '@/components/inquiry/View'
 import CreateInquiry from '@/components/modals/CreateInquiry'
 import Navbar from '@/components/nav/Navbar'
 import Sidebar from '@/components/sidebar/Sidebar'
@@ -15,6 +16,7 @@ const Inquiries = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [inquiries, setInquiries] = useState([])
     const [total, setTotal] = useState({})
+    const [inquiry, setInquiry] = useState({})
     const [filters, setFilters] = useState({
         startedDate: '',
         endedDate: ''
@@ -50,16 +52,16 @@ const Inquiries = () => {
         fetchInquires()
     }, [])
 
-    const fetchMore = async() => {
+    const fetchMore = async () => {
         let loading = toast.loading('loading...')
         try {
             let res = {};
             if (filters.startedDate !== '' && filters.endedDate !== '') {
                 res = await axios.get(`/api/inquiry/get?page=${currentPage}&campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
-            }else{
+            } else {
                 res = await axios.get(`/api/inquiry/get?page=${currentPage}&campus=${localStorage.getItem('campus')}`)
             }
-            setInquiries(prev=> [...prev, ...res.data.inquiries])
+            setInquiries(prev => [...prev, ...res.data.inquiries])
             setCurrentPage(prev => prev + 1)
             toast.success('finished', { id: loading })
         } catch (error) {
@@ -73,15 +75,15 @@ const Inquiries = () => {
     }
 
     const handleClear = () => {
-        if(filters.startedDate !== '' || filters.endedDate !== ''){
+        if (filters.startedDate !== '' || filters.endedDate !== '') {
             setFilters({
                 startedDate: '',
                 endedDate: ''
             })
         }
     }
-    
-    const handleChange = (event)=>{
+
+    const handleChange = (event) => {
         let { name, value } = event.target
         setFilters({
             ...filters,
@@ -89,12 +91,14 @@ const Inquiries = () => {
         })
     }
 
-    const handleDelete = async (expenseId)=>{
-        if(expenseId){
-            const res = await axios.delete(`/api/expense/delete?expenseId=${expenseId}`)
-            if(res.data.message){
-                toast.success(res.data.message)
-                setExpenses(prev=> prev.filter(e=> e._id!==expenseId))
+    const handleDelete = async (inquiryId) => {
+        if (inquiryId) {
+            if(confirm('Are you sure you want to delete?')){
+                const res = await axios.delete(`/api/inquiry/delete?inquiryId=${inquiryId}`)
+                if (res.data.message) {
+                    toast.success(res.data.message)
+                    setInquiries(prev => prev.filter(e => e._id !== inquiryId))
+                }
             }
         }
     }
@@ -112,8 +116,8 @@ const Inquiries = () => {
                 <div className="flex">
                     <Sidebar currentPage={'Inquiries'} />
                     <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5">
-                        <section className="bg-gray-50 border border-gray-100 rounded-md">
-                            <div className="mx-auto max-w-screen-xl">
+                        <section className="border border-gray-100 rounded-md">
+                            <div className="mx-auto max-w-screen-2xl">
                                 <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
                                     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                                         <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
@@ -152,7 +156,6 @@ const Inquiries = () => {
                                                     <th scope="col" className="px-4 py-3">Email</th>
                                                     <th scope="col" className="px-4 py-3">Inquiry</th>
                                                     <th scope="col" className="px-4 py-3">Created At</th>
-                                                    {/* <th scope="col" className="px-4 py-3"></th> */}
                                                     <th scope="col" className="px-4 py-3">
                                                         <span className="sr-only">Actions</span>
                                                     </th>
@@ -160,15 +163,8 @@ const Inquiries = () => {
                                             </thead>
                                             <tbody>
                                                 {inquiries?.map((inquiry, i) => (
-                                                    <InquiryRow inquiry={inquiry} handleDelete={handleDelete} key={inquiry._id+i.toString()} i={i + 1} />
+                                                    <InquiryRow setInquiry={setInquiry} inquiry={inquiry} handleDelete={handleDelete} key={inquiry._id + i.toString()} i={i + 1} />
                                                 ))}
-                                                {/* <tr>
-                                                    <td className="px-4 py-3 text-lg">Total</td>
-                                                    <td className="px-4 py-3"></td>
-                                                    <td className="px-4 py-3"></td>
-                                                    <td className="px-4 py-3"></td>
-                                                    <td className="px-4 py-3 text-lg"><b>Rs.{new Intl.NumberFormat().format(getFeeSum(fees))}</b></td>
-                                                </tr> */}
                                             </tbody>
                                         </table>
                                         {isLoading && <div className='p-5 flex flex-1 justify-center items-center '>
@@ -190,6 +186,7 @@ const Inquiries = () => {
                     </div>
                 </div>
                 {showCreateInquiry && <CreateInquiry setInquiries={setInquiries} setShowCreateInquiry={setShowCreateInquiry} />}
+                {Object.keys(inquiry).length > 0 && <View inquiry={inquiry} setInquiry={setInquiry} />}
             </main>
         </div>
     )
@@ -205,7 +202,7 @@ export async function getServerSideProps(context) {
     }
 }
 
-const InquiryRow = ({ inquiry, i, handleDelete }) => {
+const InquiryRow = ({ inquiry, i, handleDelete, setInquiry }) => {
 
     return (
         <tr className="border-b animate-slow">
@@ -218,12 +215,18 @@ const InquiryRow = ({ inquiry, i, handleDelete }) => {
             <td className="px-4 py-3">{inquiry.other}</td>
             <td className="px-4 py-3">{inquiry.whatsappnumber}</td>
             <td className="px-4 py-3">{inquiry.email}</td>
-            <td className="px-4 py-3">{inquiry.inquiry}</td>
+            <td className="px-4 py-3 truncate max-w-[150px]">{inquiry.inquiry}</td>
 
             <td className="px-4 py-3">{moment(inquiry?.createdAt).format('L')}</td>
             <td className="px-4 py-3 flex items-center justify-end">
-                <div className="flex">
-                    <div onClick={()=> handleDelete(inquiry._id)} className='text-red-500 cursor-pointer'>
+                <div className="flex gap-2">
+                    <div onClick={()=> setInquiry(inquiry)} className="text-purple cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <div onClick={() => handleDelete(inquiry._id)} className='text-red-500 cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                         </svg>

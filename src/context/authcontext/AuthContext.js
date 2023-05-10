@@ -36,18 +36,20 @@ const AuthProvider = ({ children }) => {
         }
     }, [])
 
-    useEffect(() => {
-        const fetchCampuses = async () => {
-            const res = await axios.get('/api/campus/getall')
-            setCampuses(res.data)
-        }
-        fetchCampuses()
-
-        const fetchClasses = async () => {
-            const res = await axios.get('/api/classes/getall?campus='+localStorage.getItem('campus'))
+    const fetchCampuses = async () => {
+        const res = await axios.get('/api/campus/getall')
+        setCampuses(res.data)
+    }
+    
+    const fetchClasses = async (campus) => {
+        if(campus){
+            const res = await axios.get('/api/classes/getall?campus='+campus)
             setClasses(res.data)
         }
-        fetchClasses()
+    }
+    useEffect(() => {
+        fetchCampuses()
+        fetchClasses(localStorage.getItem('campus'))
     }, [])
 
 
@@ -56,7 +58,7 @@ const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{
             employee, setEmployee, decodeEmployee,
             togglesidebarondesktop, setTogglesidebarondesktop, setLocalCampus, campuses, setCampuses, classes, setClasses,
-            setFees, fees, total, setTotal
+            setFees, fees, total, setTotal, fetchClasses
         }}>
 
             {router.asPath === '/login' && children}

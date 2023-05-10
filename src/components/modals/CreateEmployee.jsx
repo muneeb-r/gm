@@ -26,7 +26,7 @@ const initialValues = {
 };
 
 
-const CreateEmployee = ({ setShowcreate }) => {
+const CreateEmployee = ({ setShowcreate, setEmployees }) => {
     const {campuses} = useContext(AuthContext)
 
     useEffect(() => {
@@ -66,6 +66,7 @@ const CreateEmployee = ({ setShowcreate }) => {
                             let loading = toast.loading('loading...')
                             addEmployee(values).then(res=>{
                                 toast.success('Employee successfully added.', {id:loading})
+                                setEmployees(prev=> [res, ...prev])
                                 resetForm()
                                 setSubmitting(false);
                             }).catch(e=>{

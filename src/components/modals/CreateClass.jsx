@@ -8,7 +8,7 @@ import { AuthContext } from "@/context/authcontext/AuthContext";
 const ClassSchema = Yup.object().shape({
     title: Yup.string()
         .required("Title is required"),
-    campus: Yup.string()
+    campusId: Yup.string()
         .required("Campus is required"),
 });
 
@@ -25,7 +25,7 @@ const CreateClass = ({ setShowCreateClass, setClasses }) => {
 
     const addClass = async (data) => {
         let loading = toast.loading('loading...')
-        const res = await axios.post('/api/classes/create', data)
+        const res = await axios.post('/api/classes/create', {...data})
         setClasses(prev => [...prev, res.data])
         toast.success('Added...', { id: loading })
         setShowCreateClass(false)
@@ -59,13 +59,13 @@ const CreateClass = ({ setShowCreateClass, setClasses }) => {
                                     <p className='form__error'><ErrorMessage className='form__error' name="title" /></p>
                                 </div>
                                 <div className='flex flex-col'>
-                                    <label htmlFor="campus">Campus</label>
-                                    <Field className='base__input' as="select" id="campus" name="campus">
+                                    <label htmlFor="campusId">Campus</label>
+                                    <Field className='base__input' as="select" id="campusId" name="campusId">
                                         <option value="">Select a campus</option>
                                         {campuses.map((c) => (
-                                            <option key={c} value={c.title}>{c.title}</option>
+                                            <option key={c._id} value={c._id}>{c.title}</option>
                                         ))}                                    </Field>
-                                    <p className='form__error'><ErrorMessage name="campus" /></p>
+                                    <p className='form__error'><ErrorMessage name="campusId" /></p>
                                 </div>
                                 <div>
                                     <button type="submit" className='base__button mt-4' disabled={Object.keys(errors).length > 0}>
