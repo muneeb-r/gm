@@ -49,15 +49,15 @@ const View = ({ setEmployee, employee, year }) => {
         const days = getDaysInMonth(year, month)
         let newData = []
         let i = 1
-        console.log(data)
+
         while (i <= days) {
             let day = i
-            getMonthName
             newData.push({
                 date: `${getMonthName(month).substring(0, 3)}-${day > 9 ? day : '0' + day}`,
-                time: data.filter((t) => t.date === `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`)[0] ? data.filter((t) => t.date === `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`)[0].time : 0,
+                time: data.filter((t) => t.date === `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`)[0] ? data.filter((t) => t.date === `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`)[0].time : 8.143,
                 tin:data.filter((t) => t.date === `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`)[0]?.tin,
-                tout:data.filter((t) => t.date === `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`)[0]?.tout
+                tout:data.filter((t) => t.date === `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`)[0]?.tout,
+                fulldate: `${year}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}`
             })
             i++
         }

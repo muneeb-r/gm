@@ -1,6 +1,7 @@
 import { authenticate } from '@/utils/authenticate'
 import { fetchStudent } from '@/utils/fetchStudent'
 import { getMonthName, getMonthsBetweenDates } from '@/utils/getMonth'
+import { schoolName } from '@/utils/schoolName'
 import axios from 'axios'
 import moment from 'moment'
 import Head from 'next/head'
@@ -70,7 +71,7 @@ const Receipt = ({ queries }) => {
                     <div className="flex flex-col w-full h-full">
                         <div className='flex items-center gap-3 pb-1 mb-1 border-b border-gray-200'>
                             <img src="favicon.ico" alt="GM School" className='h-10 w-10' />
-                            <h1 className='text-lg font-semibold'>GM School And Colleges Of Sciences</h1>
+                            <h1 className='text-lg font-semibold'>{schoolName}</h1>
                         </div>
                         <div className="flex items-center gap-5 justify-between">
                             <img src={feeStudent.picture} className='w-12 h-12 object-cover' alt="" />

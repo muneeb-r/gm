@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { database } from '@/utils/firebase';
 import { onValue, ref, set } from 'firebase/database';
@@ -15,7 +14,7 @@ const teacherSchema = Yup.object().shape({
     date: Yup.date().required("Date is required"),
 });
 
-const CreateAttendance = ({ setShowCreateAttendance }) => {
+const CreateAttendance = ({ setShowCreateAttendance, employees }) => {
     const [id, setId] = useState('')
 
     useEffect(() => {
@@ -62,19 +61,23 @@ const CreateAttendance = ({ setShowCreateAttendance }) => {
                         validationSchema={teacherSchema}
                         onSubmit={(values, { resetForm }) => {
                             if(!id) return toast.error('ID is unavailable');
+                            if(employees.filter((e)=> e.id===id).length>0){
+                                return toast.error('This id is already in use!')
+                            } else{
+                                const loading = toast.loading('loading...')
+                                const date = new Date(values.date).getFullYear().toString()
+    
+                                set(ref(database, 'attendance/'+date+'/'+id+'/'), {
+                                    ...values,
+                                    date,
+                                    active: "yes",
+                                    id
+                                  });
+                                set(ref(database, 'Register'), '');
+                                toast.success('Employee successfully registered.', {id: loading})
+                                resetForm();
+                            }
 
-                            const loading = toast.loading('loading...')
-                            const date = new Date(values.date).getFullYear().toString()
-
-                            set(ref(database, 'attendance/'+date+'/'+id+'/'), {
-                                ...values,
-                                date,
-                                active: "yes",
-                                id
-                              });
-                            set(ref(database, 'Register'), '');
-                            toast.success('Employee successfully registered.', {id: loading})
-                            resetForm();
                         }}
                     >
                         {({ errors, touched, setFieldValue }) => (

@@ -19,6 +19,7 @@ ChartJS.register(
     Tooltip,
     Legend
 );
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export function BarChart({ title, data, datasetTitle }) {
     const options = {
@@ -39,14 +40,23 @@ export function BarChart({ title, data, datasetTitle }) {
             tooltip: {
                 callbacks: {
                     label: function (context) {
-                        const tin = data.filter((d) => d.date === context.label)[0].tin
-                        const tout = data.filter((d) => d.date === context.label)[0].tout
-                        return [`Time in: ${moment(tin).format('LT')}`, `Time out: ${moment(tout).format('LT')}`, `Hours: ${context.raw.toFixed(2)}`];
+                        const value = data.filter((d) => d.date === context.label)[0]
+                        const tin = value.tin
+                        const tout = value.tout
+                        const day = new Date(value.fulldate).getDay();
+                        if (days[day] ==='Sunday') {
+                            return days[day]
+                        } else if (value.time === 8.143) {
+                            return 'Absent'
+                        } else{
+                            return [`Time in: ${moment(tin).format('LT')}`, `Time out: ${moment(tout).format('LT')}`, `Hours: ${context.raw.toFixed(2)}`];
+                        }
                     }
                 }
             }
         },
     };
+   
     return <Bar options={options} height={'500'} data={{
         labels: data.map((d) => d.date),
         datasets: [
@@ -55,7 +65,20 @@ export function BarChart({ title, data, datasetTitle }) {
                 data: data.map((d) => d.time),
                 backgroundColor: (context) => {
                     const value = context.dataset.data[context.dataIndex];
-                    return value >= 6 ? 'rgb(3, 90, 252)' : value <= 2.5&&'rgb(247, 45, 45)';
+                    const doc = data[context.dataIndex]
+                    const day = new Date(doc?.fulldate).getDay()
+
+                    if (days[day] === 'Sunday') {
+                        return 'gray';
+                    } else if (value === 8.143) {
+                        return '#f72d2d'
+                    } else if (value >= 5.5) {
+                        return '#035afc'
+                    } else if (value>=4.2) {
+                        return '#BE6DB7'
+                    }else if(value>=2){
+                        return '#FF8400'
+                    }
                 },
             }
         ],

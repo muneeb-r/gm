@@ -1,6 +1,7 @@
 import { authenticate } from '@/utils/authenticate'
 import { fetchStudent } from '@/utils/fetchStudent'
 import { getMonthName, getMonthsBetweenDates } from '@/utils/getMonth'
+import { schoolName } from '@/utils/schoolName'
 import axios from 'axios'
 import moment from 'moment'
 import Head from 'next/head'
@@ -80,7 +81,7 @@ const MultipleReceipts = ({ queries }) => {
         <>
             <Head>
                 <title>Multiple Receipts</title>
-                <meta name="description" content='GM School And Colleges Of Sciences' />
+                <meta name="description" content={schoolName} />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href={"/favicon.ico"} />
             </Head>

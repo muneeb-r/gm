@@ -7,6 +7,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { BarLoader } from 'react-spinners';
 import ClassForm from './forms/ClassForm';
 import { deleteFile } from '@/utils/deleteFile';
+import { toast } from 'react-hot-toast';
 
 const studentSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -25,7 +26,7 @@ const studentSchema = Yup.object().shape({
     isActive: Yup.boolean()
 });
 
-const ViewStudent = ({ setViewStudent, viewStudent }) => {
+const ViewStudent = ({ setViewStudent, viewStudent, setStudents, students }) => {
     let initialValues = {
         name: viewStudent.name,
         fathername: viewStudent.fathername,
@@ -150,10 +151,16 @@ const ViewStudent = ({ setViewStudent, viewStudent }) => {
                         initialValues={initialValues}
                         validationSchema={studentSchema}
                         onSubmit={(values, { setSubmitting, resetForm, setValues }) => {
+                            const loading = toast.loading('loading...')
                             updateStudent(values).then((data) => {
+                                let oldStuds = students.filter(student => student._id !== viewStudent._id)
+                                oldStuds = [data, ...oldStuds]
+                                setStudents(oldStuds)
                                 setValues(data)
-                                // resetForm()
                                 setSubmitting(false);
+                                toast.success('Student successfully updated 👍', {id: loading})
+                            }).catch((error) => {
+                                toast.success('Oops! something went wrong. 😩', {id: loading})
                             })
                         }}
                     >

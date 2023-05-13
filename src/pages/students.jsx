@@ -6,10 +6,11 @@ import Sidebar from '@/components/sidebar/Sidebar'
 import { AuthContext } from '@/context/authcontext/AuthContext'
 import { authenticate } from '@/utils/authenticate'
 import { deleteFile } from '@/utils/deleteFile'
+import { schoolName } from '@/utils/schoolName'
 import axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { ClipLoader } from 'react-spinners'
 
@@ -22,29 +23,68 @@ const Students = ({ }) => {
     const [feeStudent, setFeeStudent] = useState({})
     const { classes } = useContext(AuthContext)
     const [isLoading, setIsLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [total, setTotal] = useState({})
+    const [filterType, setFilterType] = useState({ type: 'Simple', data: {} })
 
     const fetchStudents = async () => {
+        let res = {};
+        setCurrentPage(1)
+        setTotal({})
+        setStudents([])
+        setIsLoading(true)
         try {
-            setIsLoading(true)
-            const res = await axios.get(`/api/student/getall?campus=${localStorage.getItem('campus')}`)
-            setStudents(res.data)
+
+            res = await axios.get(`/api/student/getall?campus=${localStorage.getItem('campus')}`)
+            setStudents(res.data.students)
+            setTotal({
+                total: res.data.total,
+                pages: res.data.pages
+            })
+            setFilterType({ type: 'Simple', data: {} })
             setIsLoading(false)
         } catch (error) {
+            toast.error('Something went wrong.')
             setIsLoading(false)
+            console.log(error)
         }
     }
     useEffect(() => {
         fetchStudents()
     }, [])
 
+    const fetchMore = async () => {
+        let loading = toast.loading('loading...')
+        try {
+            let res = {};
+            if (filterType.type === 'Text') {
+                res = await axios.get(`/api/student/getall?byText=true&text=${filterType.data.text}&campus=${localStorage.getItem('campus')}&page=${currentPage}`)
+            } else if (filterType.type === 'Class') {
+                res = await axios.get(`/api/student/getall?byClass=true&class=${fclass}&session=${fsession}&campus=${localStorage.getItem('campus')}&page=${currentPage}`)
+            } else {
+                res = await axios.get(`/api/student/getall?campus=${localStorage.getItem('campus')}&page=${currentPage}`)
+            }
+            setStudents([...students, ...res.data.students])
+            setCurrentPage(prev => prev + 1)
+            toast.success('finished', { id: loading })
+        } catch (error) {
+            toast.error('something went wrong...', { id: loading })
+        }
+    }
+
     const handleFilter = async () => {
         if (fclass && fsession) {
+            setCurrentPage(1)
+            setTotal({})
+            setStudents([])
             try {
-                setStudents([])
-                setIsLoading(true)
-                const res = await axios.get(`/api/student/search?byClass=true&class=${fclass}&session=${fsession}&campus=${localStorage.getItem('campus')}`)
-                setStudents(res.data)
-                setIsLoading(false)
+                const res = await axios.get(`/api/student/getall?byClass=true&class=${fclass}&session=${fsession}&campus=${localStorage.getItem('campus')}`)
+                setStudents(res.data.students)
+                setTotal({
+                    total: res.data.total,
+                    pages: res.data.pages
+                })
+                setFilterType({ type: 'Class', data: {} })
             } catch (error) {
                 toast.error('Something went wrong.')
                 setIsLoading(false)
@@ -52,9 +92,21 @@ const Students = ({ }) => {
         }
     }
 
-    const handleTextSearch = async (e) => {
-        const res = await axios.get(`/api/student/search?byText=true&text=${e.target.value}&campus=${localStorage.getItem('campus')}`)
-        setStudents(res.data)
+    const handleTextSearch = async (value) => {
+        setCurrentPage(1)
+        setTotal({})
+        setStudents([])
+        try {
+            const res = await axios.get(`/api/student/getall?byText=true&text=${value}&campus=${localStorage.getItem('campus')}`)
+            setStudents(res.data.students)
+            setTotal({
+                total: res.data.total,
+                pages: res.data.pages
+            })
+            setFilterType({ type: 'Text', data: { text: value } })
+        } catch (error) {
+            toast.error('Something went wrong')
+        }
     }
 
     const handleDelete = async (stu) => {
@@ -74,17 +126,31 @@ const Students = ({ }) => {
                 console.log(error)
                 toast.error('Something went wrong.')
             }
-        }else{
+        } else {
             toast.error('Please type student name correctly.')
         }
     }
+
+    const debounce = (func) => {
+        let timer;
+        return function (...args) {
+            const context = this;
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(() => {
+                timer = null;
+                func.apply(context, args);
+            }, 500);
+        };
+    };
+
+    const optimizedFn = useCallback(debounce(handleTextSearch), []);
 
 
     return (
         <>
             <Head>
-                <title>Students - GM School And Colleges Of Sciences</title>
-                <meta name="description" content="Generated by create next app" />
+                <title>Students - {schoolName}</title>
+                <meta name="description" content={schoolName} />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -93,52 +159,14 @@ const Students = ({ }) => {
                 <div className="flex">
                     <Sidebar currentPage={'Students'} />
                     <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5">
-                        <div className='flex flex-col items-start md:flex-row justify-between gap-3 mb-4'>
-                            <div className="flex gap-3 flex-wrap">
 
-                                <select onChange={(e) => setFclass(e.target.value)} value={fclass} className='base__select'>
-                                    <option value="">Select a class...</option>
-                                    {classes.map((c, i) => (
-                                        <option key={i} value={c.title}>{c.title}</option>
-                                    ))}
-                                </select>
-
-                                <select onChange={(e) => setFsession(e.target.value)} value={fsession} className='base__select'>
-                                    <option value="">Select Session</option>
-                                    <option value="2023-2024">2023-2024</option>
-                                    <option value="2024-2025">2024-2025</option>
-                                    <option value="2025-2026">2025-2026</option>
-                                    <option value="2026-2027">2026-2027</option>
-                                    <option value="2027-2028">2027-2028</option>
-                                    <option value="2028-2029">2028-2029</option>
-                                    <option value="2029-2030">2029-2030</option>
-                                    <option value="2030-2031">2030-2031</option>
-                                </select>
-
-                                <button onClick={handleFilter} className='base__button'>Apply</button>
-
-                                {fclass && fsession && <button onClick={() => { setFclass(''); setFsession(''); fetchStudents() }} className='base__button'>Clear</button>}
-
-                            </div>
-                            <div className="">
-                                <button className='base__button' onClick={() => setShowCreateStudent(true)} title='Add Student'>
-                                    <div className='mr-2'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
-                                        </svg>
-
-                                    </div>
-                                    Add Student
-                                </button>
-                            </div>
-                        </div>
 
                         <div className='flex mb-3 justify-between items-center'>
                             <div className="flex items-center space-x-2 base__search">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-600">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                                 </svg>
-                                <input type="search" onChange={handleTextSearch} placeholder='Search...' className='bg-transparent outline-none' />
+                                <input type="search" onChange={(e)=> optimizedFn(e.target.value)} placeholder='Search...' className='bg-transparent outline-none' />
                             </div>
                             <div>
                                 <div onClick={fetchStudents} className='w-8 h-8 font-bold rounded-full flex justify-center items-center bg-gray-50 hover:scale-125 active:rotate-180 transition-all duration-300 ease-in-out cursor-pointer'>
@@ -150,8 +178,101 @@ const Students = ({ }) => {
                         </div>
 
                         <div className=' max-w-full' >
+                            <section className="bg-gray-50 border border-gray-100 rounded-md">
+                                <div className="mx-auto max-w-screen-xl">
+                                    <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+                                        <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                                            <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                                                <div className="flex gap-3 items-center flex-wrap">
 
-                            <div className='h-fit'>
+                                                    <select onChange={(e) => setFclass(e.target.value)} value={fclass} className='base__select px-3 bg-white'>
+                                                        <option value="">Select a class...</option>
+                                                        {classes.map((c, i) => (
+                                                            <option key={i} value={c.title}>{c.title}</option>
+                                                        ))}
+                                                    </select>
+
+                                                    <select onChange={(e) => setFsession(e.target.value)} value={fsession} className='base__select px-3 bg-white'>
+                                                        <option value="">Select Session</option>
+                                                        <option value="2023-2024">2023-2024</option>
+                                                        <option value="2024-2025">2024-2025</option>
+                                                        <option value="2025-2026">2025-2026</option>
+                                                        <option value="2026-2027">2026-2027</option>
+                                                        <option value="2027-2028">2027-2028</option>
+                                                        <option value="2028-2029">2028-2029</option>
+                                                        <option value="2029-2030">2029-2030</option>
+                                                        <option value="2030-2031">2030-2031</option>
+                                                    </select>
+
+                                                    <button onClick={handleFilter} className='base__button'>Apply</button>
+
+                                                    {fclass && fsession && <button onClick={() => { setFclass(''); setFsession(''); fetchStudents() }} className='base__button'>Clear</button>}
+
+                                                </div>
+                                            </div>
+                                            <div className="">
+                                                <button className='base__button' onClick={() => setShowCreateStudent(true)} title='Add Student'>
+                                                    <div className='mr-2'>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                                                        </svg>
+
+                                                    </div>
+                                                    Add Student
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-sm text-left text-gray-500 ">
+                                                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                                    <tr>
+                                                        <th className="px-4 py-3 font-bold">
+                                                            Sr.no
+                                                        </th>
+                                                        <th className="px-6 py-3 font-bold">
+                                                            Name
+                                                        </th>
+                                                        <th className="px-6 py-3 font-bold">
+                                                            Father Name
+                                                        </th>
+                                                        <th className="px-6 py-3 font-bold">
+                                                            Class
+                                                        </th>
+                                                        <th className="px-6 py-3 font-bold">
+                                                            Medium
+                                                        </th>
+                                                        <th className="px-6 py-3 font-bold">
+                                                            R.No
+                                                        </th>
+                                                        <th className="px-1 py-3 font-bold">
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {students?.map((stu, i) => (
+                                                        <StudentRow handleDelete={handleDelete} i={i} student={stu} key={stu._id} setViewStudent={setViewStudent} setFeeStudent={setFeeStudent} />
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                            {isLoading && <div className='p-5 flex flex-1 justify-center items-center '>
+                                                <ClipLoader
+                                                    color="orange"
+                                                    cssOverride={{}}
+                                                    size={35}
+                                                    speedMultiplier={1}
+                                                />
+                                            </div>}
+                                        </div>
+                                        <nav className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                                            <button onClick={fetchMore} disabled={currentPage >= total?.pages || isLoading} className="base__button px-3">Show more</button>
+                                            <p className='text-gray-600'>Showing <b>{currentPage}</b> of <b>{total.pages}</b> pages</p>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </section>
+
+
+                            {/* <div className='h-fit'>
                                 <div className="overflow-auto shadow sm:rounded-lg border border-gray-200">
                                     <table className="w-full min-w-[700px] text-sm text-left text-gray-500">
                                         <thead className="text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
@@ -191,13 +312,14 @@ const Students = ({ }) => {
                                     </div>}
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
+                        </div>
                     </div>
                 </div>
 
                 {showCreateStudent && <CreateStudent setStudents={setStudents} setShowCreateStudent={setShowCreateStudent} />}
-                {Object.keys(viewStudent).length > 0 && <ViewStudent viewStudent={viewStudent} setViewStudent={setViewStudent} />}
+                {Object.keys(viewStudent).length > 0 && <ViewStudent setStudents={setStudents} students={students} viewStudent={viewStudent} setViewStudent={setViewStudent} />}
                 {Object.keys(feeStudent).length > 0 && <AddFee feeStudent={feeStudent} setFeeStudent={setFeeStudent} />}
             </main>
         </>
@@ -206,7 +328,7 @@ const Students = ({ }) => {
 
 export default Students
 
-const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete }) => {
+const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete, i }) => {
     const [showMenu, setShowMenu] = useState(false)
     const ref = useRef()
 
@@ -223,6 +345,9 @@ const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete }) =>
     return (
         <>
             <tr className="bg-white border-b hover:bg-gray-50 animate-slow" title={student.name}>
+                <td className="px-4 py-4">
+                    {i + 1}
+                </td>
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center">
                     <Image className='h-10 w-10 mr-2 rounded object-cover' width={50} height={50} src={student.picture ? student.picture : '/avatar.png'} alt={student.name} />
                     {student.name}
