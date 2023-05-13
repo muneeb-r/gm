@@ -35,6 +35,17 @@
         transform: scale(1);
     }
 }
+.animate-slow-popup{
+    animation: animate-slow-popup-an 2s;
+}
+@keyframes animate-slow-popup-an {
+    from{
+        transform: scale(0);
+    }
+    to{
+        transform: scale(1.7);
+    }
+}
 .animate-bg-opacity{
     animation: animate-bg-opacity-an .4s;
 }

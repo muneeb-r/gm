@@ -1,4 +1,5 @@
 import axios from 'axios'
+import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 
 const Students = () => {
@@ -36,7 +37,7 @@ const Student = ({student})=>{
                 <span className='font-semibold text-xs md:text-sm text-blue-600 bg-blue-100 p-2 py-1 rounded shadow'>{student.fathername}</span>
             </div>
             <div>
-                <span className='bg-orange-100 text-orange-600 p-2 rounded-md font-semibold py-1 text-xs md:text-sm shadow'>12/2/2023</span>
+                <span className='bg-orange-100 text-orange-600 p-2 rounded-md font-semibold py-1 text-xs md:text-sm shadow'>{moment(student?.createdAt).format('L')}</span>
             </div>
         </div>
     ):(

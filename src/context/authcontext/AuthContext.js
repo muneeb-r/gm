@@ -6,6 +6,7 @@ import React, { createContext, useEffect, useState } from "react";
 import SelectCampus from "../SelectCampus";
 import Head from "next/head";
 import { ClipLoader } from "react-spinners";
+import { schoolName } from "@/utils/schoolName";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -40,10 +41,10 @@ const AuthProvider = ({ children }) => {
         const res = await axios.get('/api/campus/getall')
         setCampuses(res.data)
     }
-    
+
     const fetchClasses = async (campus) => {
-        if(campus){
-            const res = await axios.get('/api/classes/getall?campus='+campus)
+        if (campus) {
+            const res = await axios.get('/api/classes/getall?campus=' + campus)
             setClasses(res.data)
         }
     }
@@ -70,14 +71,18 @@ const AuthProvider = ({ children }) => {
                     <Head>
                         <title>loading...</title>
                     </Head>
-                    <div className='p-5 w-full h-screen flex flex-1 justify-center items-center '>
+                    <div className='p-5 w-full h-screen flex flex-1 justify-center items-center bg-slate-100 flex-col'>
+                        <img className="w-28 h-28 animate-slow-popup" src='/logo.png' />
+                        <h1 className="mt-8 text-xl md:text-4xl font-bold tracking-tighter text-gray-900">{schoolName}</h1>
+                    </div>
+                    {/* <div className='p-5 w-full h-screen flex flex-1 justify-center items-center '>
                         <ClipLoader
                             color="orange"
                             cssOverride={{}}
                             size={50}
                             speedMultiplier={1}
                         />
-                    </div>
+                    </div> */}
                 </>
 
             )}
