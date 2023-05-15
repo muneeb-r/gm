@@ -68,8 +68,7 @@ const computeMissingFees = async (student, campus) => {
             newDates
         }
     }else{
-        return
+        return null
     }
-
 
 }

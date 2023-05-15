@@ -166,7 +166,7 @@ const Students = ({ }) => {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-600">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                                 </svg>
-                                <input type="search" onChange={(e)=> optimizedFn(e.target.value)} placeholder='Search...' className='bg-transparent outline-none' />
+                                <input type="search" onChange={(e) => optimizedFn(e.target.value)} placeholder='Search...' className='bg-transparent outline-none' />
                             </div>
                             <div>
                                 <div onClick={fetchStudents} className='w-8 h-8 font-bold rounded-full flex justify-center items-center bg-gray-50 hover:scale-125 active:rotate-180 transition-all duration-300 ease-in-out cursor-pointer'>
@@ -178,7 +178,7 @@ const Students = ({ }) => {
                         </div>
 
                         <div className=' max-w-full' >
-                            <section className="bg-gray-50 border border-gray-100 rounded-md">
+                            <section className="bg-gray-50 border border-gray-200 rounded-md">
                                 <div className="mx-auto max-w-screen-xl">
                                     <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
                                         <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
@@ -273,9 +273,9 @@ const Students = ({ }) => {
 
 
                             {/* <div className='h-fit'>
-                                <div className="overflow-auto shadow sm:rounded-lg border border-gray-200">
+                                <div className="overflow-auto shadow sm:rounded-lg border border-gray-300">
                                     <table className="w-full min-w-[700px] text-sm text-left text-gray-500">
-                                        <thead className="text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
+                                        <thead className="text-gray-700 uppercase bg-gray-50 border-b border-gray-300">
                                             <tr>
                                                 <th className="px-6 py-3 font-bold">
                                                     Name

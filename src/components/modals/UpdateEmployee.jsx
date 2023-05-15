@@ -36,7 +36,7 @@ const UpdateEmployee = ({ setEmployeeToUpdate, employeeToUpdate, setEmployees, e
     const [passwordType, setPasswordType] = useState('password')
     const [file, setFile] = useState(null)
     const [progress, setProgress] = useState(0)
-    const { campuses } = useContext(AuthContext)
+    const { campuses, employee, handleLogout } = useContext(AuthContext)
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -90,6 +90,9 @@ const UpdateEmployee = ({ setEmployeeToUpdate, employeeToUpdate, setEmployees, e
                                 picture: res.data.picture
                             }
                         })
+                        if (res.data._id===employee._id) {
+                            return handleLogout()
+                        }
                         let newEmployees = employees.filter(e => e._id !== employeeToUpdate._id)
                         setEmployees([...newEmployees, res.data])
                         setProgress(0)
@@ -101,12 +104,8 @@ const UpdateEmployee = ({ setEmployeeToUpdate, employeeToUpdate, setEmployees, e
     }
 
     const updateEmployee = async (data) => {
-        try {
-            const res = await axios.put('/api/employee/update?employeeId=' + employeeToUpdate._id, data);
-            return res.data;
-        } catch (error) {
-            toast.error('somthing went wrong.')
-        }
+        const res = await axios.put('/api/employee/update?employeeId=' + employeeToUpdate._id, data);
+        return res.data;
     }
 
 
@@ -155,8 +154,12 @@ const UpdateEmployee = ({ setEmployeeToUpdate, employeeToUpdate, setEmployees, e
                         validationSchema={validationSchema}
                         onSubmit={(values, { setSubmitting, resetForm, setValues }) => {
                             let loading = toast.loading('loading...')
-                            updateEmployee(values).then(res => {
-
+                            
+                            updateEmployee(values)
+                            .then(res => {
+                                if (res._id===employee._id) {
+                                    return handleLogout()
+                                }
                                 let newEmployees = employees.filter(e => e._id !== employeeToUpdate._id)
                                 setEmployees([...newEmployees, res])
                                 setEmployeeToUpdate(res)
@@ -221,10 +224,10 @@ const UpdateEmployee = ({ setEmployeeToUpdate, employeeToUpdate, setEmployees, e
                                     <p className='form__error'><ErrorMessage name="campus" /></p>
                                 </div>
                                 <div className='flex flex-col items-start gap-3'>
-                                <div className='flex items-center'>
-                                    <Field className="w-5 h-5" type="checkbox" name="isAdmin" />
-                                    <span className='ml-3 font-roboto'>is Admin</span>
-                                </div>
+                                    <div className='flex items-center'>
+                                        <Field className="w-5 h-5" type="checkbox" name="isAdmin" />
+                                        <span className='ml-3 font-roboto'>is Admin</span>
+                                    </div>
                                     <button className='base__button' type="submit" disabled={!isValid || isSubmitting}>
                                         Submit
                                     </button>

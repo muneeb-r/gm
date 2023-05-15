@@ -78,7 +78,7 @@ const settings = () => {
                     <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5">
 
                         <div className="flex justify-between flex-col gap-3 md:flex-row">
-                            <div className="flex-1  p-3 rounded-lg shadow flex-col border border-gray-200 min-w-[350px]">
+                            <div className="flex-1  p-3 rounded-lg shadow flex-col border border-gray-300 min-w-[350px]">
                                 <div className="flex flex-wrap justify-between items-center">
                                     <h1 className='text-xl font-roboto text-black'>Campuses</h1>
 
@@ -97,7 +97,7 @@ const settings = () => {
                                 </div>
                             </div>
 
-                            <div className="flex-1  p-3 rounded-lg shadow flex-col border border-gray-200 min-w-[350px]">
+                            <div className="flex-1  p-3 rounded-lg shadow flex-col border border-gray-300 min-w-[350px]">
                                 <div className="flex flex-wrap justify-between items-center">
                                     <h1 className='text-xl font-roboto text-black'>Classes</h1>
 

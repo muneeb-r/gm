@@ -109,7 +109,7 @@ const Sidebar = ({ currentPage }) => {
 
 
     return (
-        <div className={`md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-60px)] fixed lg:sticky top-[60px] z-10 border-r border-gray-200`}>
+        <div className={`md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-60px)] fixed lg:sticky top-[60px] z-10 border-r border-gray-300`}>
             <div className='relative w-full h-full'>
                 {/* <img className='w-full h-full -z-50' src="/bg.jpg" alt="" /> */}
                 <div className='bg-white absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>

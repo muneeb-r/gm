@@ -149,7 +149,7 @@ const fees = () => {
                                 </button>
                             </div>
                         </div>
-                        <section className="bg-gray-50 border border-gray-100 rounded-md">
+                        <section className="bg-gray-50 border border-gray-200 rounded-md">
                             <div className="mx-auto max-w-screen-xl">
                                 <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
                                     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">

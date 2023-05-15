@@ -15,6 +15,7 @@ export default function Home() {
     const [showcreate, setShowcreate] = useState(false)
     const [employeeToUpdate, setEmployeeToUpdate] = useState({})
     const [employees, setEmployees] = useState([])
+    const [filteredEmployees, setFilteredEmployees] = useState([])
     const { employee } = useContext(AuthContext)
     const router = useRouter()
 
@@ -26,6 +27,7 @@ export default function Home() {
         const fetchEmployees = async () => {
             const res = await axios.get('/api/employee/getall')
             setEmployees(res.data)
+            setFilteredEmployees(res.data)
         }
         fetchEmployees()
     }, [])
@@ -41,6 +43,7 @@ export default function Home() {
                         await deleteFile(employee.picture)
                     } catch (e) { }
                     setEmployees(employees.filter((emp) => emp._id !== employee._id))
+                    setFilteredEmployees(employees.filter((emp) => emp._id !== employee._id))
                     toast.success(res.data.message)
                 }
 
@@ -51,6 +54,10 @@ export default function Home() {
         }else{
             toast.error('Please type employee name correctly.')
         }
+    }
+
+    const handleChange = (e)=>{
+        setFilteredEmployees(employees.filter((emp)=> emp.name.toLowerCase().match(e.target.value.toLowerCase())))
     }
 
     return (
@@ -69,7 +76,7 @@ export default function Home() {
                         <div className="flex justify-between items-center flex-wrap gap-3">
                             <div className="flex">
                                 <div className="flex">
-                                    <input type="search" placeholder='Search' className='base__search' />
+                                    <input onChange={handleChange} type="search" placeholder='Search' className='base__search' />
                                 </div>
                             </div>
                             <div className="flex">
@@ -108,7 +115,7 @@ export default function Home() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {employees.map((emp) => (
+                                    {filteredEmployees.map((emp) => (
                                         <EmployeeRow key={emp._id} employee={emp} setEmployeeToUpdate={setEmployeeToUpdate} handleDelete={handleDelete} />
                                     ))}
                                 </tbody>

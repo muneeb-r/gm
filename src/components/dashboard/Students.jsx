@@ -13,7 +13,7 @@ const Students = () => {
         fetchStudents()
     }, [])
   return (
-    <div className='border border-gray-200 rounded-md min-w-[350px] grid-cols-1' >
+    <div className='border border-gray-300 rounded-xl min-w-[350px] grid-cols-1' >
         <h1 className='p-4 font-roboto text-xl'>Lastest Added Students</h1>
         <hr className='mx-3' />
         <div className="flex p-3 flex-col gap-1">

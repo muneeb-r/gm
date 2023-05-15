@@ -52,8 +52,8 @@ const CreateStudent = ({ setShowCreateStudent, setStudents }) => {
     }
 
     return (
-        <div className='fixed top-0 left-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-sm'>
-            <div className='w-full lg:w-1/2 bg-white md:my-10 h-fit scale-up'>
+        <div className='fixed top-0 left-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-[1px]'>
+            <div className='w-full lg:w-1/2 rounded-lg bg-white md:my-10 h-fit scale-up'>
                 <div className="flex justify-between items-center border-b border-gray-200 px-5 py-3">
                     <h1 className='font-semibold tracking-widest  md:text-lg lg:text-xl'>Add Student</h1>
 
@@ -69,12 +69,14 @@ const CreateStudent = ({ setShowCreateStudent, setStudents }) => {
                         initialValues={initialValues}
                         validationSchema={studentSchema}
                         onSubmit={(values, { setSubmitting, resetForm }) => {
-                            const loading = toast.loading('loading...')
+                            const loading = toast.loading('loading... ')
                             addStudent(values).then((data)=>{
                                 resetForm()
                                 setSubmitting(false);
                                 setStudents(prev=> [...prev, data])
-                                toast.success('Added successfully!', {id: loading})
+                                toast.success('Added successfully! 👍', {id: loading})
+                            }).catch((error)=>{
+                                toast.error('Something went wrong.')
                             })
                         }}
                     >
