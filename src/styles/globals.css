@@ -36,14 +36,14 @@
     }
 }
 .animate-slow-popup{
-    animation: animate-slow-popup-an 2s;
+    animation: animate-slow-popup-an 2.6s;
 }
 @keyframes animate-slow-popup-an {
     from{
-        transform: scale(0);
+        transform: scale(0.4);
     }
     to{
-        transform: scale(1.7);
+        transform: scale(1.8);
     }
 }
 .animate-bg-opacity{

@@ -42,7 +42,7 @@ const SelectCampus = ({setEmployee, employee, setLocalCampus}) => {
                 </select>
                 <button onClick={handleContinue} className='base__button'>Continue...</button>
 
-                <button onClick={handleLogout} className='text-gray-400 hover:text-white hover:underline'>log out</button>
+                <button onClick={handleLogout} className='text-gray-400 hover:text-white hover:underline'>Log out</button>
             </div>
         </>
     )

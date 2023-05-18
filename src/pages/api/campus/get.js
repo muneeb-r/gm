@@ -13,8 +13,11 @@ async function handler(req, res) {
         campus = await Campus.findById(req.query.campusId)
 
     }
-
-    res.status(200).json(campus)
+    if(campus){
+        res.status(200).json(campus)
+    }else{
+        res.status(404).json({error:true,message:'Campus not found.'})
+    }
 
 }
 

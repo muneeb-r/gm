@@ -31,6 +31,8 @@ const View = ({ setEmployee, employee, year }) => {
     }, [])
 
     const computeData = () => {
+        if(!month) return
+
         const values = time.filter((t) => new Date(t.Date).getMonth() + 1 === month)
         let data = []
         values.forEach((value) => {
@@ -86,7 +88,7 @@ const View = ({ setEmployee, employee, year }) => {
                 <div className="flex p-5 flex-col gap-3">
                     <div className="flex gap-5 flex-wrap items-center">
                         <select className="base__select bg-white px-3" onChange={(e) => setMonth(parseInt(e.target.value))}>
-                            <option value="" disabled>Select Month</option>
+                            <option value="" >Select Month</option>
                             {months.map((month, index) => (
                                 <option value={index + 1}>{month}</option>
                             ))}
@@ -100,6 +102,18 @@ const View = ({ setEmployee, employee, year }) => {
                             <div className="flex gap-1 items-center">
                                 <span className="w-10 h-5 bg-[#f72d2d] rounded"></span>
                                 <span className="font-medium text-gray-800">Absent</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <span className="w-10 h-5 bg-[gray] rounded"></span>
+                                <span className="font-medium text-gray-800">Sunday</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <span className="w-10 h-5 bg-[#BE6DB7] rounded"></span>
+                                <span className="font-medium text-gray-800">Half Day</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <span className="w-10 h-5 bg-[#FF8400] rounded"></span>
+                                <span className="font-medium text-gray-800">Short Time</span>
                             </div>
                         </div>
                     </div>

@@ -36,7 +36,14 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        setLocalCampus(localStorage.getItem('campus'))
+        if(localStorage.getItem('campus')){
+            axios.get('/api/campus/get?title='+localStorage.getItem('campus'))
+            .then((res) => {
+                setLocalCampus(localStorage.getItem('campus'))
+            }).catch((err) => {
+                handleLogout()
+            })
+        }
         if (Cookies.get('token')) {
             decodeEmployee(Cookies.get('token'))
                 .then((e) => {
