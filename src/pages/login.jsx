@@ -60,15 +60,15 @@ export default function Login() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className='flex justify-center items-center h-screen backdrop-blur-sm bg-gray-50'>
-                <div className='flex h-[80vh] flex-row shadow-lg rounded-xl overflow-hidden z-50 border border-gray-100'>
+            <main className='flex justify-center items-center h-screen backdrop-blur-sm bg-gray-100'>
+                <div className='flex h-[80vh] transition-all duration-200 flex-row shadow-lg rounded-xl overflow-hidden z-50 border border-gray-100'>
                     <div className="relative hidden md:flex">
                         <img className='max-w-md object-cover' src="/login-bg.jpg" alt="" />
                         <div className="h-full w-full bg-gradient-to-tr to-[rgba(0,0,0,1)] backdrop-blur-[2px] from-transparent absolute top-0 right-0"></div>
                         <img className='w-14 h-14 absolute top-5 left-5' src="/favicon.ico" alt="" />
                     </div>
                     <div className="flex flex-col space-y-3 p-5 bg-white">
-                        <h1 className='font-roboto text-2xl mb-3 text-black'>Login</h1>
+                        <h1 className='font-bold text-2xl mb-3 text-gray-800'>Login</h1>
                         <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" placeholder='Email' className='base__input' />
                         <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='Password' className='base__input' />
                         {/* <select className='base__select' onClick={(e)=> setCampus(e.target.value)}>

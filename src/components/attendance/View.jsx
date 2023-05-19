@@ -93,7 +93,7 @@ const View = ({ setEmployee, employee, year }) => {
                                 <option value={index + 1}>{month}</option>
                             ))}
                         </select>
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 flex-wrap">
                         {/* return value >= 6 ? 'rgb(3, 90, 252)' : value <= 2.5&&'rgb(247, 45, 45)'; */}
                             <div className="flex gap-1 items-center">
                                 <span className="w-10 h-5 bg-[#035afc] rounded"></span>
@@ -114,6 +114,10 @@ const View = ({ setEmployee, employee, year }) => {
                             <div className="flex gap-1 items-center">
                                 <span className="w-10 h-5 bg-[#FF8400] rounded"></span>
                                 <span className="font-medium text-gray-800">Short Time</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <span className="w-10 h-5 bg-[#fa469d] rounded"></span>
+                                <span className="font-medium text-gray-800">Late Absent</span>
                             </div>
                         </div>
                     </div>

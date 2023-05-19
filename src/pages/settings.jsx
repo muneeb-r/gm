@@ -14,7 +14,7 @@ import { toast } from 'react-hot-toast'
 const settings = () => {
     const [showCreateCampus, setShowCreateCampus] = useState(false)
     const [showCreateClass, setShowCreateClass] = useState(false)
-    const { classes: allClasses, setClasses: setAllClasses, campuses, setCampuses } = useContext(AuthContext)
+    const { classes: allClasses, setClasses: setAllClasses, campuses, setCampuses, handleLogout } = useContext(AuthContext)
     const [classes, setClasses] = useState(allClasses)
     const [campusToUpdate, setCampusToUpdate] = useState({})
 
@@ -38,8 +38,12 @@ const settings = () => {
             try {
                 const res = await axios.delete('/api/campus/delete?campusId=' + campusId)
                 if (res.data) {
+                    const campusDeleted = campuses.filter(c => c._id === campusId)
                     setCampuses(prev => prev.filter(c => c._id !== campusId))
                     toast.success(res.data.message)
+                    if(localStorage.getItem('campus') === campusDeleted[0].title){
+                        handleLogout()
+                    }
                 }
             } catch (error) {
                 toast.error('Something went wrong.')
@@ -151,7 +155,6 @@ const ClassItem = ({ clasS, handleClassDelete }) => {
             if (res.data) {
                 setCampus(res.data)
             }
-            console.log(res.data)
         } catch (error) {
             console.log(error)
         }

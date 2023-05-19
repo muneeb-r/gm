@@ -11,7 +11,8 @@ const links = [
         </svg>
         ,
         link: '/',
-        onlyForAdmin: false
+        onlyForAdmin: false,
+        disabled: false
     },
     {
         title: 'Students',
@@ -20,7 +21,8 @@ const links = [
         </svg>
         ,
         link: '/students',
-        onlyForAdmin: false
+        onlyForAdmin: false,
+        disabled: false
     },
     {
         title: 'Fees',
@@ -29,7 +31,8 @@ const links = [
         </svg>
         ,
         link: '/fees',
-        onlyForAdmin: false
+        onlyForAdmin: false,
+        disabled: false
     },
     {
         title: 'Missing Fees',
@@ -39,7 +42,8 @@ const links = [
 
         ,
         link: '/missingfees',
-        onlyForAdmin: false
+        onlyForAdmin: false,
+        disabled: false
     },
     {
         title: 'Expenses',
@@ -48,7 +52,8 @@ const links = [
         </svg>
         ,
         link: '/expense',
-        onlyForAdmin: false
+        onlyForAdmin: false,
+        disabled: false
     },
     {
         title: 'Inquiries',
@@ -57,7 +62,8 @@ const links = [
         </svg>
         ,
         link: '/inquiries',
-        onlyForAdmin: false
+        onlyForAdmin: false,
+        disabled: false
     },
     {
         title: 'Analytics',
@@ -66,7 +72,8 @@ const links = [
         </svg>
         ,
         link: '/analytics',
-        onlyForAdmin: true
+        onlyForAdmin: true,
+        disabled: false
     },
     {
         title: 'Attendance',
@@ -75,7 +82,8 @@ const links = [
         </svg>
         ,
         link: '/attendance',
-        onlyForAdmin: true
+        onlyForAdmin: true,
+        disabled: false
     },
     {
         title: 'Employees',
@@ -84,7 +92,8 @@ const links = [
         </svg>
         ,
         link: '/employees',
-        onlyForAdmin: true
+        onlyForAdmin: true,
+        disabled: false
     },
     {
         title: 'Settings',
@@ -94,7 +103,8 @@ const links = [
         </svg>
         ,
         link: '/settings',
-        onlyForAdmin: false
+        onlyForAdmin: false,
+        disabled: false
     },
 ]
 
@@ -109,28 +119,28 @@ const Sidebar = ({ currentPage }) => {
 
 
     return (
-        <div className={`md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-60px)] fixed lg:sticky top-[60px] z-10 border-r border-gray-300`}>
+        <div className={`rounded-3xl md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-76px)] fixed lg:sticky top-[60px] z-10 overflow-hidden mt-[8px]`}>
             <div className='relative w-full h-full'>
                 {/* <img className='w-full h-full -z-50' src="/bg.jpg" alt="" /> */}
-                <div className='bg-white absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
+                <div className='bg-gray-50 absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
                     <div className={`justify-center m-2 hidden lg:flex ${togglesidebarondesktop ? 'opacity-0 h-0' : 'opacity-100 h-auto'}  transition-all duration-300`}>
-                        <input onChange={handleSearch} type="text" placeholder='Search...' className='base__search flex-1 shadow-none bg-white' />
+                        <input onChange={handleSearch} type="text" placeholder='Search...' className='base__search flex-1 shadow-none bg-white rounded-3xl c-shadow border-white' />
                     </div>
                     <div className="flex pr-2 mt-2 flex-col gap-1">
-                        {filteredLinks.map((link, index) => employee.isAdmin ? (
-                            <Link href={link.link} key={index}>
-                                <div className={`relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
-                                    {currentPage === link.title && <div className='absolute top-2 left-0 h-6 md:h-8 w-1 rounded-r-md shadow bg-orange-500'></div>}
-                                    <div className={`text-black  ${currentPage === link.title && 'text-orange-500'}`}>{link.svg}</div>
-                                    <div className={`text-black  hidden lg:block transition-all duration-300 font-medium min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
+                        {filteredLinks.map((link, index) => employee.isAdmin ? !link.disabled && (
+                            <Link href={link.link} key={index}  >
+                                <div className={`relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-500 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-500 shadow font-semibold '}`}>
+                                    {currentPage === link.title && <div className='absolute top-2 left-0 h-6 md:h-8 w-1 rounded-r-md shadow bg-orange-50'></div>}
+                                    <div className={`text-black  ${currentPage === link.title && 'text-orange-50'}`}>{link.svg}</div>
+                                    <div className={`text-black text-left hidden lg:block transition-all duration-300 font-medium min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-50'}`}>{link.title}</div>
                                 </div>
                             </Link>
                         ) : !link.onlyForAdmin && (
                             <Link href={link.link} key={index}>
-                                <div className={` relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-100 c-shadow font-semibold '}`}>
-                                    {currentPage === link.title && <div className='absolute top-2 left-0 h-8 w-1 rounded-r-md shadow bg-orange-500'></div>}
-                                    <div className={`text-black  ${currentPage === link.title && 'text-orange-500'}`}>{link.svg}</div>
-                                    <div className={`text-black hidden md:block font-medium transition-all duration-300 min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-500'}`}>{link.title}</div>
+                                <div className={` relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-500 shadow font-semibold '}`}>
+                                    {currentPage === link.title && <div className='absolute top-2 left-0 h-8 w-1 rounded-r-md shadow bg-orange-50'></div>}
+                                    <div className={`text-black  ${currentPage === link.title && 'text-orange-50'}`}>{link.svg}</div>
+                                    <div className={`text-black text-left hidden md:block font-medium transition-all duration-300 min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-50'}`}>{link.title}</div>
                                 </div>
                             </Link>
                         )

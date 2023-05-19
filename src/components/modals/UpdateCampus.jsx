@@ -31,9 +31,9 @@ const UpdateCampus = ({ setCampusToUpdate, campusToUpdate, setCampuses, campuses
 
     return (
         <div className='fixed top-0 left-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-sm'>
-            <div className='w-full lg:w-1/3 bg-white md:my-10 h-fit scale-up'>
+            <div className='w-full lg:w-1/3 bg-white md:my-10 h-fit scale-up rounded-lg'>
                 <div className="flex justify-between items-center border-b border-gray-200 px-5 py-3">
-                    <h1 className='font-semibold tracking-widest  md:text-lg lg:text-xl'>Add Campus</h1>
+                    <h1 className='font-semibold tracking-widest  md:text-lg lg:text-xl'>Update Campus</h1>
 
                     <div onClick={() => setCampusToUpdate(false)} className='bg-gray-50 p-2 rounded-full text-gray-700 cursor-pointer hover:scale-125 active:scale-90 transition-all duration-200 ease-in-out'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

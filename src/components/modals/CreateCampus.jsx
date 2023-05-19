@@ -29,7 +29,7 @@ const CreateCampus = ({ setShowCreateCampus, setCampuses }) => {
 
     return (
         <div className='fixed top-0 left-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-sm'>
-            <div className='w-full lg:w-1/3 bg-white md:my-10 h-fit scale-up'>
+            <div className='w-full lg:w-1/3 bg-white md:my-10 h-fit scale-up rounded-lg'>
                 <div className="flex justify-between items-center border-b border-gray-200 px-5 py-3">
                     <h1 className='font-semibold tracking-widest  md:text-lg lg:text-xl'>Add Campus</h1>
 

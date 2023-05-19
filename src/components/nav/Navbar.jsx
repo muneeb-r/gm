@@ -7,7 +7,7 @@ const Navbar = ({ }) => {
 
 
   return (
-    <nav className='bg-white h-[60px] z-50 border-b border-gray-300 px-4 py-1 flex justify-between items-center sticky top-0'>
+    <nav className='h-[60px] z-50 bg-gray-50 rounded-3xl px-4 py-1 flex justify-between items-center sticky top-0 c-shadow'>
       <div className="flex items-center space-x-1">
         <div onClick={() => setTogglesidebarondesktop(prev => !prev)} className="flex hover:text-black hover:border-gray-400 text-gray-600 border border-gray-300 p-1 rounded-lg cursor-pointer hover:bg-opacity-60 active:bg-opacity-40">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -16,7 +16,7 @@ const Navbar = ({ }) => {
         </div>
         <img className='h-12' src="/favicon.ico" alt="GM School" />
       </div>
-      <div className=' hidden sm:flex items-center w-1/3 rounded-full p-2 border border-gray-300 px-4 gap-2 focus-within:border-orange-400'>
+      <div className=' hidden sm:flex items-center w-1/3 rounded-full p-2 border border-gray-300 bg-white px-4 gap-2 focus-within:border-orange-400'>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-600">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
         </svg>
@@ -24,7 +24,7 @@ const Navbar = ({ }) => {
         <input className='outline-none flex-1 bg-transparent' type="text" placeholder='Search...' />
       </div>
       <div className="flex relative">
-        <div onClick={() => setShowemployeemenu(prev => !prev)} className="flex  items-center text-gray-500 hover:border-gray-400 hover:text-gray-700 space-x-3 cursor-pointer border border-gray-300 active:bg-opacity-10 p-1 pr-2 rounded-3xl">
+        <div onClick={() => setShowemployeemenu(prev => !prev)} className="flex  items-center text-gray-500 bg-white hover:border-gray-400 hover:text-gray-700 space-x-3 cursor-pointer border border-gray-300 active:bg-opacity-10 p-1 pr-2 rounded-3xl">
           <img className='h-7 w-7 md:h-9 md:w-9 rounded-full bg-white object-cover shadow' src={employee.picture ? employee.picture : '/avatar.png'} alt="" />
           <span className='font-roboto text-sm md:text-md'>{employee.name}</span>
           <div className=''>

@@ -67,8 +67,12 @@ export function BarChart({ title, data, datasetTitle }) {
                     const value = context.dataset.data[context.dataIndex];
                     const doc = data[context.dataIndex]
                     const day = new Date(doc?.fulldate).getDay()
+                    const isLate = doc?.tin?isGreaterThanCurrentTime(doc.tin):false
 
-                    if (days[day] === 'Sunday') {
+                    
+                    if(isLate){
+                        return 'rgb(250, 70, 157)';
+                    } else if (days[day] === 'Sunday') {
                         return 'gray';
                     } else if (value === 8.143) {
                         return '#f72d2d'
@@ -84,3 +88,19 @@ export function BarChart({ title, data, datasetTitle }) {
         ],
     }} />;
 }
+
+function isGreaterThanCurrentTime(dateString) {
+  
+    // Extract the hours, minutes, and seconds from the given date string
+    const [year, month, day, hours, minutes, seconds] = dateString.split(/[- :]/);
+
+  
+    // Create a new date object using the given date and time
+    const givenDate = new Date(year, month, day, hours, minutes, seconds);
+  
+    // Set the time to 7:39 AM for the current date
+    const currentTime = new Date(year, month, day, 7, 30, 0);
+  
+    // Compare the given date with the current time
+    return givenDate > currentTime;
+  }
