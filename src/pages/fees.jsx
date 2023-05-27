@@ -16,7 +16,7 @@ import { ClipLoader } from 'react-spinners'
 
 
 const fees = () => {
-    const { employee, classes, setFees, fees, total, setTotal} = useContext(AuthContext)
+    const { employee, classes, setFees, fees, total, setTotal } = useContext(AuthContext)
     const [currentPage, setCurrentPage] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
     const [fClass, setFClass] = useState('')
@@ -121,11 +121,21 @@ const fees = () => {
         fetchFees(true)
     }
 
+    const handleDelete = async (feeId) => {
+        if (feeId) {
+            if (confirm("Are you sure you want to delete?")) {
+                const res = await axios.delete(`/api/studentfee/delete?feeId=${feeId}`)
+                toast.success(res.data.message)
+                setFees(prev => prev.filter((fee) => fee._id !== feeId))
+            }
+        }
+    }
+
     return (
         <div>
             <Head>
                 <title>Students - {schoolName}</title>
-                <meta name="description" content={schoolName}/>
+                <meta name="description" content={schoolName} />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -136,7 +146,7 @@ const fees = () => {
                     <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5 gap-2">
                         <div className="flex">
                             <div className="shadow rounded-md">
-                                <button onClick={()=> setShowCreateMultipleFees(true)} className='base__button px-3 gap-2 shadow-inner shadow-orange-300'>
+                                <button onClick={() => setShowCreateMultipleFees(true)} className='base__button px-3 gap-2 shadow-inner shadow-orange-300'>
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -216,7 +226,7 @@ const fees = () => {
                                             </thead>
                                             <tbody>
                                                 {fees.map((fee, i) => (
-                                                    <FeeRow fee={fee} key={fee._id + i} i={i + 1} />
+                                                    <FeeRow fee={fee} key={fee._id + i} i={i + 1} handleDelete={handleDelete} />
                                                 ))}
 
                                                 <tr>
@@ -262,7 +272,7 @@ export async function getServerSideProps(context) {
     }
 }
 
-const FeeRow = ({ fee, i }) => {
+const FeeRow = ({ fee, i, handleDelete }) => {
     const [student, setStudent] = useState({})
 
     useEffect(() => {
@@ -272,7 +282,7 @@ const FeeRow = ({ fee, i }) => {
     }, [])
 
     return (
-        <tr className="border-b animate-slow">
+        <tr className="border-b animate-slow group">
             <th scope="row" className="px-4 py-3 font-medium text-gray-900 max-w-[30px]">{i}</th>
             <td className="px-4 py-3 min-w-[180px]">
                 <div className="flex gap-2 items-center">
@@ -289,25 +299,13 @@ const FeeRow = ({ fee, i }) => {
             <td className="px-4 py-3">{fee.remainings}</td>
             <td className="px-3 py-3 text-sm">{moment(fee?.createdAt).format('L')}</td>
             <td className="px-4 py-3">{student.rn}</td>
-            <td className="px-4 py-3 flex items-center justify-end">
-                <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
-                    <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+            <td className="px-4 py-3 flex items-center justify-center">
+                <div className="h-full flex items-center">
+                    <svg onClick={() => handleDelete(fee._id)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 scale-0 group-hover:scale-100 transition-all duration-200 cursor-pointer text-red-500">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                </button>
-                <div id="apple-imac-27-dropdown" className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">
-                    <ul className="py-1 text-sm text-gray-700" aria-labelledby="apple-imac-27-dropdown-button">
-                        <li>
-                            <a href="#" className="block py-2 px-4 hover:bg-gray-100">Show</a>
-                        </li>
-                        <li>
-                            <a href="#" className="block py-2 px-4 hover:bg-gray-100">Edit</a>
-                        </li>
-                    </ul>
-                    <div className="py-1">
-                        <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
-                    </div>
                 </div>
+
             </td>
         </tr>
 

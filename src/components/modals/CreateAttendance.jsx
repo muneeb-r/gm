@@ -71,7 +71,8 @@ const CreateAttendance = ({ setShowCreateAttendance, employees }) => {
                                     ...values,
                                     date,
                                     active: "yes",
-                                    id
+                                    id,
+                                    campus: localStorage.getItem('campus')
                                   });
                                 set(ref(database, 'Register'), '');
                                 toast.success('Employee successfully registered.', {id: loading})

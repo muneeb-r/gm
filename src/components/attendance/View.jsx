@@ -55,7 +55,6 @@ const View = ({ setEmployee, employee, year }) => {
         const days = getDaysInMonth(year, month)
         let newData = []
         let i = 1
-
         while (i <= days) {
             let day = i
             newData.push({
@@ -161,10 +160,8 @@ const View = ({ setEmployee, employee, year }) => {
 export default View
 
 const EmpReport = React.forwardRef(({ data, employee, month, year }, ref) => {
-    // const day = new Date(value.fulldate).getDay();
-    // if (days[day] ==='Sunday') {
     return (
-        <div ref={ref} className="p-5">
+        <div ref={ref} className="p-7">
             <div className="flex flex-col">
                 <div className="flex items-center gap-3">
                     <img className="h-12 w-12" src="/favicon.ico" alt="" />
@@ -193,7 +190,7 @@ const EmpReport = React.forwardRef(({ data, employee, month, year }, ref) => {
                                     <td className="border border-gray-400 px-2">{item.tout?moment(item.tout).format('LT'):'----'}</td>
                                     <td className="border border-gray-400 px-2">{
                                         !isNaN(item.time) ?
-                                            new Date(item.fulldate).getDay() === 6 ? 'Sunday' :
+                                            new Date(item.fulldate).getDay() === 0 ? 'Sunday' :
                                                 item.time === 8.143 ?
                                                     'Absent' :
                                                     item.time.toFixed(1).toString() + 'h' :

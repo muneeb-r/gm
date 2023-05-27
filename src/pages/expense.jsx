@@ -52,13 +52,13 @@ const Expense = () => {
         fetchExpenses()
     }, [])
 
-    const fetchMore = async() => {
+    const fetchMore = async () => {
         let loading = toast.loading('loading...')
         try {
             let res = {};
             if (filters.startedDate !== '' && filters.endedDate !== '') {
                 res = await axios.get(`/api/expense/get?page=${currentPage}&campus=${localStorage.getItem('campus')}&startedDate=${filters.startedDate}&endedDate=${filters.endedDate}`)
-            }else{
+            } else {
                 res = await axios.get(`/api/expense/get?page=${currentPage}&campus=${localStorage.getItem('campus')}`)
             }
             setExpenses([...expenses, ...res.data.expenses])
@@ -75,15 +75,15 @@ const Expense = () => {
     }
 
     const handleClear = () => {
-        if(filters.startedDate !== '' || filters.endedDate !== ''){
+        if (filters.startedDate !== '' || filters.endedDate !== '') {
             setFilters({
                 startedDate: '',
                 endedDate: ''
             })
         }
     }
-    
-    const handleChange = (event)=>{
+
+    const handleChange = (event) => {
         let { name, value } = event.target
         setFilters({
             ...filters,
@@ -91,14 +91,25 @@ const Expense = () => {
         })
     }
 
-    const handleDelete = async (expenseId)=>{
-        if(expenseId){
+    const handleDelete = async (expenseId) => {
+        if (expenseId) {
             const res = await axios.delete(`/api/expense/delete?expenseId=${expenseId}`)
-            if(res.data.message){
+            if (res.data.message) {
                 toast.success(res.data.message)
-                setExpenses(prev=> prev.filter(e=> e._id!==expenseId))
+                setExpenses(prev => prev.filter(e => e._id !== expenseId))
             }
         }
+    }
+
+    const getSum = (expes) => {
+        let initialValue = 0
+        let sum = expes.reduce(function (accumulator, curValue) {
+
+            return accumulator + curValue.amount
+
+        }, initialValue)
+
+        return sum
     }
 
     return (
@@ -158,15 +169,14 @@ const Expense = () => {
                                             </thead>
                                             <tbody>
                                                 {expenses.map((expense, i) => (
-                                                    <ExpenseRow expense={expense} handleDelete={handleDelete} key={expense._id+i.toString()} i={i + 1} />
+                                                    <ExpenseRow expense={expense} handleDelete={handleDelete} key={expense._id + i.toString()} i={i + 1} />
                                                 ))}
-                                                {/* <tr>
+                                                <tr>
                                                     <td className="px-4 py-3 text-lg">Total</td>
                                                     <td className="px-4 py-3"></td>
                                                     <td className="px-4 py-3"></td>
-                                                    <td className="px-4 py-3"></td>
-                                                    <td className="px-4 py-3 text-lg"><b>Rs.{new Intl.NumberFormat().format(getFeeSum(fees))}</b></td>
-                                                </tr> */}
+                                                    <td className="px-4 py-3 text-lg"><b>Rs.{new Intl.NumberFormat().format(getSum(expenses))}</b></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                         {isLoading && <div className='p-5 flex flex-1 justify-center items-center '>
@@ -216,7 +226,7 @@ const ExpenseRow = ({ expense, i, handleDelete }) => {
             <td className="px-4 py-3">{moment(expense?.createdAt).format('L')}</td>
             <td className="px-4 py-3 flex items-center justify-end">
                 <div className="flex">
-                    <div onClick={()=> handleDelete(expense._id)} className='text-red-500 cursor-pointer'>
+                    <div onClick={() => handleDelete(expense._id)} className='text-red-500 cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                         </svg>

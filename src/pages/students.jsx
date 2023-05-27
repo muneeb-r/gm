@@ -157,7 +157,7 @@ const Students = ({ }) => {
             <main>
                 <Navbar />
                 <div className="flex">
-                    <Sidebar currentPage={'Students'} />
+                    <Sidebar currentPage={'Students/Fee'} />
                     <div className="flex w-full lg:w-auto lg:flex-1 flex-col p-4 md:p-5">
 
 

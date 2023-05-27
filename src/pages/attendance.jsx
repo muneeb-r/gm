@@ -5,7 +5,7 @@ import Sidebar from '@/components/sidebar/Sidebar'
 import { authenticate } from '@/utils/authenticate'
 import { database } from '@/utils/firebase'
 import { schoolName } from '@/utils/schoolName'
-import { onValue, ref, remove } from 'firebase/database'
+import { equalTo, onValue, orderByChild, query, ref, remove } from 'firebase/database'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -21,8 +21,10 @@ const Attendance = () => {
 
     const fetchEmployees = async () => {
         setIsLoading(true)
+        setFilteredEmployees([])
         try {
-            onValue(ref(database, 'attendance/' + filters), (snapshot) => {
+            const q = query(ref(database, 'attendance/' + filters), orderByChild("campus"), equalTo(localStorage.getItem('campus')))
+            onValue(q, (snapshot) => {
                 let data = []
                 snapshot.forEach((childSnapshot) => {
                     const childData = childSnapshot.val();
