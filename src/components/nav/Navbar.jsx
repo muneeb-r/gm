@@ -7,7 +7,7 @@ const Navbar = ({ }) => {
 
 
   return (
-    <nav className='h-[60px] z-50 bg-gray-50 rounded-3xl px-4 py-1 flex justify-between items-center sticky top-0 c-shadow'>
+    <nav className='h-[60px] z-50 bg-gray-100 rounded-3xl px-4 py-1 flex justify-between items-center sticky top-0'>
       <div className="flex items-center space-x-1">
         <div onClick={() => setTogglesidebarondesktop(prev => !prev)} className="flex hover:text-black hover:border-gray-400 text-gray-600 border border-gray-300 p-1 rounded-lg cursor-pointer hover:bg-opacity-60 active:bg-opacity-40">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

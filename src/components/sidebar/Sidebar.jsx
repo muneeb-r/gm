@@ -122,7 +122,7 @@ const Sidebar = ({ currentPage }) => {
         <div className={`rounded-3xl md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-76px)] fixed lg:sticky top-[60px] z-10 overflow-hidden mt-[8px]`}>
             <div className='relative w-full h-full'>
                 {/* <img className='w-full h-full -z-50' src="/bg.jpg" alt="" /> */}
-                <div className='bg-gray-50 absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
+                <div className='bg-gray-100 absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
                     <div className={`justify-center m-2 hidden lg:flex ${togglesidebarondesktop ? 'opacity-0 h-0' : 'opacity-100 h-auto'}  transition-all duration-300`}>
                         <input onChange={handleSearch} type="text" placeholder='Search...' className='base__search flex-1 shadow-none bg-white rounded-3xl c-shadow border-white' />
                     </div>

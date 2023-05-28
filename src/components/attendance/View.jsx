@@ -74,20 +74,43 @@ const View = ({ setEmployee, employee, year }) => {
     }, [month])
 
     return (
-        <div className='fixed animate-bg-opacity top-0 left-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-60 backdrop-blur-sm'>
-            <div className='w-full lg:w-[90%] bg-white rounded-md md:my-10 h-fit scale-up'>
+        <div className='fixed animate-bg-opacity top-0 left-0 w-full z-50 h-screen overflow-auto flex justify-center bg-black bg-opacity-20 backdrop-blur-[2px]'>
+            <div className='w-full lg:w-[90%] max-w-7xl bg-white rounded-md md:my-10 h-fit scale-up shadow'>
                 <div className="flex justify-between items-center border-b border-gray-200 px-5 py-3">
                     <h1 className='font-semibold flex items-center gap-2 tracking-widest  md:text-lg lg:text-xl'>
                         <span>{employee.name}</span>
                     </h1>
 
-                    <div onClick={() => setEmployee({})} className='bg-gray-50 p-2 rounded-full text-gray-700 cursor-pointer hover:scale-125 active:scale-90 transition-all duration-200 ease-in-out'>
+                    <div onClick={() => setEmployee({})} className='bg-gray-50 p-2 rounded-full hover:shadow text-gray-700 hover:bg-gray-800 hover:text-white cursor-pointer hover:scale-125 active:scale-90 transition-all duration-200 ease-in-out'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </div>
                 </div>
                 <div className="flex p-5 flex-col gap-3">
+                    <div className="flex flex-wrap gap-7">
+                        <div className="flex flex-col">
+                            <span className="md:text-md font-semibold">Name</span>
+                            <span className="text-gray-500">{employee.name}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="md:text-md font-semibold">Age</span>
+                            <span className="text-gray-500">{employee.age}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="md:text-md font-semibold">Phone</span>
+                            <span className="text-gray-500">{employee.phone?employee.phone:'not available!'}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="md:text-md font-semibold">Qualification</span>
+                            <span className="text-gray-500">{employee.qualification?employee.qualification:'not available!'}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="md:text-md font-semibold">CNIC</span>
+                            <span className="text-gray-500">{employee.cnic?employee.cnic:'not available!'}</span>
+                        </div>
+                    </div>
+                    <hr className="my-2 mx-2" />
                     <div className="flex gap-5 flex-wrap items-center justify-between">
                         <div className="flex items-center flex-wrap gap-3">
                             <select className="base__select bg-white px-3" onChange={(e) => setMonth(parseInt(e.target.value))}>
