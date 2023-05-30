@@ -76,11 +76,11 @@ export function BarChart({ title, data, datasetTitle }) {
                         return 'gray';
                     } else if (value === 8.143) {
                         return '#f72d2d'
-                    } else if (value >= 5.5) {
+                    } else if (value >= 5) {
                         return '#035afc'
-                    } else if (value>=4.2) {
+                    } else if (value>=3.8) {
                         return '#BE6DB7'
-                    }else if(value>=2){
+                    }else if(value>=1.5){
                         return '#FF8400'
                     }
                 },
