@@ -35,7 +35,7 @@ const CreateMultipleFees = ({ setShowCreateMultipleFees }) => {
 
                 for (const rn of RNs) {
                     if (rn) {
-                        const res = await axios.get('/api/student/get?rn=' + parseInt(rn))
+                        const res = await axios.get('/api/student/get?rn=' + rn+'&campus='+localStorage.getItem('campus'))
                         if (res.data) {
                             studs.push(res.data)
                         } else {

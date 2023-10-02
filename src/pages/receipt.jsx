@@ -17,6 +17,9 @@ const Receipt = ({ queries }) => {
     const [feeStudent, setFeeStudent] = useState({})
     const router = useRouter()
     const [error, setError] = useState(false)
+    const [scaleX, setScaleX] = useState(100)
+    const [scaleY, setScaleY] = useState(100)
+    const [gap, setGap] = useState(8)
 
     useEffect(() => {
         const getStudent = async () => {
@@ -40,6 +43,12 @@ const Receipt = ({ queries }) => {
 
 
     useEffect(() => {
+        setGap(localStorage.getItem('gap'))
+        setScaleX(localStorage.getItem('scalex'))
+        setScaleY(localStorage.getItem('scaley'))
+        setMoveX(parseInt(localStorage.getItem('movex')))
+        setMarginTop(parseInt(localStorage.getItem('movey')))
+
         const callback = (event) => {
             var name = event.key;
             var code = event.code;
@@ -67,7 +76,7 @@ const Receipt = ({ queries }) => {
                 <link rel="icon" href={"/favicon.ico"} />
             </Head>
             <div className="flex w-full fixed top-0 h-screen left-0 bg-white justify-center">
-                <div className="flex border border-gray-200 p-3 absolute" style={{ transform: `scale(${scale}%)`, marginTop: marginTop, marginLeft: moveX }}>
+                <div className="flex border border-gray-200 p-3 absolute" style={{ transform: `scaleX(${scaleX}%) scaleY(${scaleY}%)`, marginTop: marginTop, marginLeft: moveX }}>
                     <div className="flex flex-col w-full h-full">
                         <div className='flex items-center gap-3 pb-1 mb-1 border-b border-gray-200'>
                             <img src="favicon.ico" alt="GM School" className='h-10 w-10' />
@@ -104,16 +113,37 @@ const Receipt = ({ queries }) => {
                         </div>
                     </div>
                 </div>
-
+                
                 {showSliders && <div className="flex mt-64 absolute bottom-0 gap-3 items-center">
                     <div className='flex items-center'>
-                        Scale: <input type="range" min='0' max='200' onChange={(e) => setScale(parseInt(e.target.value))} />
+                        Gap: <input type="range" min='0' max='100' onChange={(e) => {
+                            setGap(parseInt(e.target.value))
+                            localStorage.setItem('gap', parseInt(e.target.value))
+                        }} />
                     </div>
                     <div className='flex items-center'>
-                        Move Y: <input type="range" min='-300' max='300' onChange={(e) => setMarginTop(parseInt(e.target.value))} />
+                        ScaleX: <input type="range" min='0' max='200' onChange={(e) => {
+                            setScaleX(parseInt(e.target.value))
+                            localStorage.setItem('scalex', parseInt(e.target.value))
+                        }} />
                     </div>
                     <div className='flex items-center'>
-                        Move X:<input type="range" min='-600' max='600' onChange={(e) => setMoveX(parseInt(e.target.value))} />
+                        ScaleY: <input type="range" min='0' max='200' onChange={(e) => {
+                            setScaleY(parseInt(e.target.value))
+                            localStorage.setItem('scaley', parseInt(e.target.value))
+                        }} />
+                    </div>
+                    <div className='flex items-center'>
+                        Move Y: <input type="range" min='-300' max='300' onChange={(e) => {
+                            setMarginTop(parseInt(e.target.value))
+                            localStorage.setItem('movey', parseInt(e.target.value))
+                        }} />
+                    </div>
+                    <div className='flex items-center'>
+                        Move X:<input type="range" min='-600' max='600' onChange={(e) => {
+                            setMoveX(parseInt(e.target.value))
+                            localStorage.setItem('movex', parseInt(e.target.value))
+                        }} />
                     </div>
                 </div>}
 

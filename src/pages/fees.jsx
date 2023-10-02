@@ -28,9 +28,9 @@ const fees = () => {
     const [showCreateMultipleFees, setShowCreateMultipleFees] = useState(false)
     const router = useRouter()
 
-    if (!employee.isAdmin) {
-        router.back()
-    }
+    // if (!employee.isAdmin) {
+    //     router.back()
+    // }
 
     const fetchFees = async (ignoreDates) => {
         let res = {};

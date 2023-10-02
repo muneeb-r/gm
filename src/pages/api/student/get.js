@@ -7,7 +7,7 @@ async function handler(req, res) {
 
     let stud={};
     if(req.query.rn){
-        stud = await Student.findOne({rn:req.query.rn}, {name:1,_id:1, classes:1, rn:1,picture:1, monthlyfee:1,fathername:1})
+        stud = await Student.findOne({rn:req.query.rn, campus: req.query.campus}, {name:1,_id:1, classes:1, rn:1,picture:1, monthlyfee:1,fathername:1})
     } else if(req.query.studentId){
         stud = await Student.findById(req.query.studentId)
     }

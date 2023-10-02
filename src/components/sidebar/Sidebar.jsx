@@ -52,7 +52,7 @@ const links = [
         </svg>
         ,
         link: '/expense',
-        onlyForAdmin: false,
+        onlyForAdmin: true,
         disabled: false
     },
     {
@@ -137,7 +137,7 @@ const Sidebar = ({ currentPage }) => {
                             </Link>
                         ) : !link.onlyForAdmin && (
                             <Link href={link.link} key={index}>
-                                <div className={` relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-500 shadow font-semibold '}`}>
+                                <div className={` relative animate-opacity rounded-r-full gap-3 px-2 md:px-3 md:py-3 h-10 md:h-12 flex items-center overflow-hidden hover:bg-orange-100 transition-all duration-200 active:bg-orange-300 group cursor-pointer ${currentPage === link.title && 'bg-orange-500 shadow font-semibold hover:bg-orange-600'}`}>
                                     {currentPage === link.title && <div className='absolute top-2 left-0 h-8 w-1 rounded-r-md shadow bg-orange-50'></div>}
                                     <div className={`text-black  ${currentPage === link.title && 'text-orange-50'}`}>{link.svg}</div>
                                     <div className={`text-black text-left hidden md:block font-medium transition-all duration-300 min-w-[114px] ${togglesidebarondesktop ? 'opacity-0' : 'opacity-100'} ${currentPage === link.title && 'text-orange-50'}`}>{link.title}</div>
