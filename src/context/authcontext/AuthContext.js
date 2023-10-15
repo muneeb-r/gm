@@ -37,12 +37,12 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         setLocalCampus(localStorage.getItem('campus'))
-        if(localStorage.getItem('campus')){
-            axios.get('/api/campus/get?title='+localStorage.getItem('campus'))
-            .then((res) => {
-            }).catch((err) => {
-                handleLogout()
-            })
+        if (localStorage.getItem('campus')) {
+            axios.get('/api/campus/get?title=' + localStorage.getItem('campus'))
+                .then((res) => {
+                }).catch((err) => {
+                    handleLogout()
+                })
         }
         if (Cookies.get('token')) {
             decodeEmployee(Cookies.get('token'))
@@ -89,6 +89,9 @@ const AuthProvider = ({ children }) => {
                     <div className='p-5 w-full h-screen flex flex-1 justify-center items-center bg-slate-100 flex-col'>
                         <img className="w-28 h-28 animate-slow-popup scale-[1.8]" src='/logo.png' />
                         <h1 className="mt-8 text-xl md:text-4xl font-bold tracking-tighter text-gray-900">{schoolName}</h1>
+                        <p className='px-4 mt-5 text-gray-600'>
+                            Powered by <b className="text-orange-500">CodeCrafters Inc.</b> 
+                        </p>
                     </div>
                     {/* <div className='p-5 w-full h-screen flex flex-1 justify-center items-center '>
                         <ClipLoader

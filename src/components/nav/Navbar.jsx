@@ -7,16 +7,16 @@ const Navbar = ({ }) => {
 
 
   return (
-    <nav className='h-[60px] z-50 bg-gray-100 rounded-3xl px-4 py-1 flex justify-between items-center sticky top-0'>
+    <nav className='h-[60px] z-50 bg-teal-600 backdrop-blur-sm bg-opacity-70 rounded-3xl px-4 py-1 flex justify-between items-center sticky top-0'>
       <div className="flex items-center space-x-1">
-        <div onClick={() => setTogglesidebarondesktop(prev => !prev)} className="flex hover:text-black hover:border-gray-400 text-gray-600 border border-gray-300 p-1 rounded-lg cursor-pointer hover:bg-opacity-60 active:bg-opacity-40">
+        <div onClick={() => setTogglesidebarondesktop(prev => !prev)} className="flex hover:border-gray-200 border border-gray-200 p-1 text-gray-100 rounded-lg cursor-pointer hover:bg-opacity-60 active:bg-opacity-40">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
           </svg>
         </div>
         <img className='h-12' src="/favicon.ico" alt="GM School" />
       </div>
-      <div className=' hidden sm:flex items-center w-1/3 rounded-full p-2 border border-gray-300 bg-white px-4 gap-2 focus-within:border-orange-400'>
+      <div className=' hidden sm:flex items-center w-1/3 rounded-full p-2 bg-white px-4 gap-2 focus-within:border-orange-400'>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-600">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
         </svg>
@@ -36,6 +36,9 @@ const Navbar = ({ }) => {
         {showemployeemenu && <div className="absolute top-11 right-0 bg-white shadow-md rounded py-2 scale-up">
           <div className="flex px-4 py-1 cursor-pointer hover:bg-slate-100">{localStorage.getItem('campus')}</div>
           <div onClick={handleLogout} className="flex px-4 py-1 cursor-pointer hover:bg-slate-100">Log out</div>
+          <p className='px-4 mt-2 text-xs text-gray-600'>
+            Powered by <b className="text-orange-500">CodeCrafters Inc.</b>
+          </p>
         </div>}
       </div>
     </nav>
