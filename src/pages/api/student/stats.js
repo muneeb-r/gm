@@ -76,7 +76,7 @@ async function handler(req, res) {
                     }
                 },
                 {
-                    $limit: 10
+                    $limit: 14
                 }
             ])
         }

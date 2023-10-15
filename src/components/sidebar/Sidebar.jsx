@@ -119,10 +119,10 @@ const Sidebar = ({ currentPage }) => {
 
 
     return (
-        <div className={`rounded-3xl md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-76px)] fixed lg:sticky top-[68px] z-10 overflow-hidden mt-[8px]`}>
+        <div className={`rounded-xl md:rounded-3xl md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-76px)] fixed lg:sticky top-[68px] z-10 overflow-hidden mt-[8px]`}>
             <div className='relative w-full h-full'>
-                {/* <img className='w-full h-full -z-50' src="/bg.jpg" alt="" /> */}
-                <div className='bg-gradient-to-r to-teal-500 from-teal-600 text-white absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
+                <img className='w-full h-full bg-yellow-900 blur-sm object-contain' src="/favicon.ico" alt="" />
+                <div className='bg-blue-600 bg-opacity-70 backdrop-blur-md text-white absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>
                     <div className={`justify-center m-2 hidden lg:flex ${togglesidebarondesktop ? 'opacity-0 h-0' : 'opacity-100 h-auto'}  transition-all duration-300`}>
                         <input onChange={handleSearch} type="text" placeholder='Search...' className='base__search flex-1 shadow-none bg-white rounded-3xl c-shadow border-white text-black' />
                     </div>
@@ -147,8 +147,8 @@ const Sidebar = ({ currentPage }) => {
                         )}
                     </div>
                     {filteredLinks.length === 0 && <p className="text-gray-700 m-3 animate-opacity">Sorry, no results found.</p>}
-                    {/* <hr className="my-3 mx-2" />
-                    <div className="flex mx-2 text-white font-roboto">
+                    {/* <hr className="my-3 mx-2 border-b-0.5 border-gray-400" />
+                    <div className="flex mx-2 text-white text-sm ">
                         {localStorage.getItem('campus')}
                     </div> */}
                 </div>

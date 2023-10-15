@@ -145,24 +145,24 @@ export default function Home() {
                 {/* small boxes box */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 col-span-1 gap-2">
 
-                  <div className="col-span-1 flex overflow-hidden border-t-4 border-violet-600 rounded-xl">
-                    <div className='flex flex-col items-center border border-gray-300 rounded-xl w-full'>
-                      <div className='flex gap-3 p-3 bg-white border-b border-gray-300 items-center w-full'>
+                  <div className="col-span-1 flex rounded-xl">
+                    <div className='flex flex-col items-center overflow-hidden border border-gray-300 rounded-xl w-full bg-white'>
+                      <div className='flex gap-3 p-3 bg-green-500 border-b border-gray-300 items-center w-full'>
                         <div className='p-2 bg-orange-200 text-orange-600 rounded-md'>
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
                           </svg>
                         </div>
-                        <span className='font-roboto'>Total Students</span>
+                        <span className='text-white'>Total Students</span>
                       </div>
-                      <span className='font-roboto text-2xl p-4'>
+                      <span className='text-2xl p-4 font-semibold'>
                         {numberOfStudents.rn?new Intl.NumberFormat().format(numberOfStudents.rn):0}
                       </span>
                     </div>
                   </div>
-                  <div className="col-span-1 flex overflow-hidden border-t-4 border-pink-500 rounded-xl">
-                    <div className='flex flex-col items-center border border-gray-300 rounded-xl w-full'>
-                      <div className='flex gap-3 p-3 bg-white border-b border-gray-300 items-center w-full'>
+                  <div className="col-span-1 flex rounded-xl">
+                    <div className='flex flex-col items-center overflow-hidden border border-gray-300 rounded-xl w-full bg-white'>
+                      <div className='flex gap-3 p-3 bg-teal-500 border-b border-gray-300 items-center w-full'>
                         <div className='p-2 bg-pink-200 text-pink-600 rounded-md'>
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
@@ -170,16 +170,16 @@ export default function Home() {
                           </svg>
 
                         </div>
-                        <span className='font-roboto'>In English Medium</span>
+                        <span className='text-white'>In English Medium</span>
                       </div>
-                      <span className='font-roboto text-2xl p-4'>
+                      <span className='text-2xl p-4 font-semibold'>
                         {numberOfStudents.englishStudents?new Intl.NumberFormat().format(numberOfStudents.englishStudents):0}
                       </span>
                     </div>
                   </div>
-                  <div className="col-span-1 flex overflow-hidden border-t-4 border-cyan-500 rounded-xl">
-                    <div className='flex flex-col items-center border border-gray-300 rounded-xl w-full'>
-                      <div className='flex gap-3 p-3 bg-white border-b border-gray-300 items-center w-full'>
+                  <div className="col-span-1 flex rounded-xl">
+                    <div className='flex flex-col items-center overflow-hidden border border-gray-300 rounded-xl w-full bg-white'>
+                      <div className='flex gap-3 p-3 bg-pink-500 border-b border-gray-300 items-center w-full'>
                         <div className='p-2 bg-cyan-200 text-cyan-600 rounded-md'>
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
@@ -187,9 +187,9 @@ export default function Home() {
                           </svg>
 
                         </div>
-                        <span className='font-roboto'>In Urdu Medium</span>
+                        <span className='text-white'>In Urdu Medium</span>
                       </div>
-                      <span className='font-roboto text-2xl p-4'>
+                      <span className='text-2xl p-4 font-semibold'>
                         {numberOfStudents.urduStudents?new Intl.NumberFormat().format(numberOfStudents.urduStudents):0}
                       </span>
                     </div>

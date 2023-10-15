@@ -224,7 +224,7 @@ const Students = ({ }) => {
                                         </div>
                                         <div className="overflow-x-auto">
                                             <table className="w-full text-sm text-left text-gray-500 ">
-                                                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                                <thead className="text-xs text-gray-900 uppercase bg-gray-200">
                                                     <tr>
                                                         <th className="px-4 py-3 font-bold">
                                                             Sr.no
@@ -348,7 +348,7 @@ const StudentRow = ({ student, setViewStudent, setFeeStudent, handleDelete, i })
                 <td className="px-4 py-4">
                     {i + 1}
                 </td>
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center">
+                <th scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap flex items-center font-semibold">
                     <Image className='h-10 w-10 mr-2 rounded object-cover' width={50} height={50} src={student.picture ? student.picture : '/avatar.png'} alt={student.name} />
                     {student.name}
                 </th>

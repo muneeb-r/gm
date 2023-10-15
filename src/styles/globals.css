@@ -5,7 +5,9 @@
 * {
     font-family: 'Raleway', sans-serif;
 }
-
+body{
+    background-color: rgb(0, 0, 0, 0.03);
+}
 @tailwind base;
 @tailwind components;
 
