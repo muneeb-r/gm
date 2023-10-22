@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
 * {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 body{
     background-color: rgb(0, 0, 0, 0.03);
@@ -32,7 +32,7 @@ body{
 }
 
 .base__search {
-    @apply bg-gray-50 border border-gray-200 px-3 py-2 outline-none focus-within:bg-white focus-within:border-orange-500 shadow rounded-3xl;
+    @apply border bg-white px-3 py-2 outline-none focus-within:bg-white focus-within:border-orange-500 shadow rounded-3xl;
 }
 
 .scale-up {

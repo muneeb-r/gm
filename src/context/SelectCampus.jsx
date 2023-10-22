@@ -34,7 +34,7 @@ const SelectCampus = ({setEmployee, employee, setLocalCampus}) => {
             </Head>
             <div className="w-full h-screen bg-black flex justify-center items-center flex-col space-y-4">
                 <img src={employee.picture?employee.picture:'/avatar.png'} className='w-16 h-16 object-cover rounded-full shadow' alt="" />
-                <select className='px-6 py-3 border-[2px] border-slate-500 bg-black outline-none rounded-md text-white hover:bg- shadow' onClick={(e) => setCampus(e.target.value)}>
+                <select className='px-6 py-3 border-[1px] border-slate-500 bg-black outline-none rounded-3xl text-white hover:bg- shadow' onClick={(e) => setCampus(e.target.value)}>
                     <option value="">Select Campus</option>
                     {campuses.map((campus) => (
                         <option key={campus._id} value={campus.title}>{campus.title}</option>
