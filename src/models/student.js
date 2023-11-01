@@ -15,7 +15,10 @@ const studentSchema = new Schema({
   monthlyfee: Number,
   registrationfee: Number,
   medium: String,
-  rn: Number,
+  rn: {
+    type: Number,
+    unique: true
+  },
   classes: {
     type: Array
   },
@@ -25,7 +28,7 @@ const studentSchema = new Schema({
   },
   campus: String
 }, {
-    timestamps: true
+  timestamps: true
 });
 
 const Student = models.Student || model('Student', studentSchema);
