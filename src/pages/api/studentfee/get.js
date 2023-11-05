@@ -5,7 +5,7 @@ async function handler(req, res) {
 
     if (req.method === 'GET') {
         try {
-            const items = 8;
+            const items = parseInt(req.query.items || '10');
             let page = parseInt(req.query.page || '0');
             let total = 0;
             let fees = [];
@@ -31,7 +31,7 @@ async function handler(req, res) {
                     }
                 }).sort({ createdAt: -1 }).limit(items).skip(items * page)
 
-            }else if (req.query.class && req.query.session) {
+            } else if (req.query.class && req.query.session) {
 
                 total = await StudentFee.countDocuments({
                     campus: req.query.campus,
@@ -48,7 +48,7 @@ async function handler(req, res) {
                         session: req.query.session
                     }
                 }).sort({ createdAt: -1 }).limit(items).skip(items * page)
-                
+
 
             } else if (req.query.limit) {
 

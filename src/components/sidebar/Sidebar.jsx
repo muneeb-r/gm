@@ -119,7 +119,7 @@ const Sidebar = ({ currentPage }) => {
 
 
     return (
-        <div className={`rounded-xl md:rounded-3xl md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-76px)] fixed lg:sticky top-[68px] z-10 overflow-hidden mt-[8px]`}>
+        <div className={`rounded-xl md:rounded-3xl md:block lg:block ${togglesidebarondesktop ? '-translate-x-20  w-[0px] lg:translate-x-0 lg:w-20' : 'w-14 md:w-20 translate-x-0 lg:w-64'} transition-all duration-300 h-[calc(100vh-76px)] md:h-[calc(100vh-84px)] fixed lg:sticky top-[68px] md:top-[76px] z-10 overflow-hidden mt-[8px]`}>
             <div className='relative w-full h-full'>
                 <img className='w-full h-full bg-yellow-900 blur-sm object-contain' src="/favicon.ico" alt="" />
                 <div className='bg-blue-600 bg-opacity-70 backdrop-blur-md text-white absolute top-0 w-full h-[calc(100vh-60px)] z-50 overflow-x-hidden overflow-y-auto'>

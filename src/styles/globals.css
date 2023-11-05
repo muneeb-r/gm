@@ -12,7 +12,7 @@ body{
 @tailwind components;
 
 .base__button {
-    @apply px-4 md:px-6 py-[6px] bg-gradient-to-r from-orange-500 to-orange-600 disabled:opacity-75 active:scale-[0.95] duration-150 transition-all shadow text-white font-roboto flex items-center rounded-3xl hover:bg-orange-600 active:bg-orange-500 disabled:bg-orange-400 disabled:cursor-not-allowed;
+    @apply px-4 md:px-6 py-[6px] bg-gradient-to-r from-orange-500 to-orange-700 disabled:opacity-75 active:scale-[0.95] duration-150 transition-all shadow text-white font-roboto flex items-center rounded-3xl hover:bg-orange-600 active:bg-orange-500 disabled:bg-orange-400 disabled:cursor-not-allowed;
 }
 
 .base__button__indigo {

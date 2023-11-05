@@ -7,7 +7,7 @@ const Navbar = ({ }) => {
 
 
   return (
-    <nav className='h-[60px] z-50 bg-blue-600 backdrop-blur-sm bg-opacity-70 rounded-3xl px-4 py-1 flex justify-between items-center sticky top-0'>
+    <nav className='h-[60px] z-50 bg-blue-800 backdrop-blur-sm bg-opacity-70 rounded-3xl px-4 py-1 flex justify-between items-center sticky top-0 md:top-2'>
       <div className="flex items-center space-x-1">
         <div onClick={() => setTogglesidebarondesktop(prev => !prev)} className="flex hover:border-gray-200 border border-gray-200 p-1 text-gray-100 rounded-lg cursor-pointer hover:bg-opacity-60 active:bg-opacity-40">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -24,7 +24,7 @@ const Navbar = ({ }) => {
         <input className='outline-none flex-1 bg-transparent' type="text" placeholder='Search...' />
       </div>
       <div className="flex relative">
-        <div onClick={() => setShowemployeemenu(prev => !prev)} className="flex  items-center text-gray-500 bg-white hover:border-gray-400 hover:text-gray-700 space-x-3 cursor-pointer border border-gray-300 active:bg-opacity-10 p-1 pr-2 rounded-3xl">
+        <div onClick={() => setShowemployeemenu(prev => !prev)} className="flex  items-center text-gray-500 bg-white hover:border-gray-400 hover:text-gray-700 space-x-3 cursor-pointer border border-gray-300 active:bg-opacity-90 p-1 pr-2 rounded-3xl">
           <img className='h-7 w-7 md:h-9 md:w-9 rounded-full bg-white object-cover shadow' src={employee.picture ? employee.picture : '/avatar.png'} alt="" />
           <span className='font-roboto text-sm md:text-md'>{employee.name}</span>
           <div className=''>
@@ -33,10 +33,10 @@ const Navbar = ({ }) => {
             </svg>
           </div>
         </div>
-        {showemployeemenu && <div className="absolute top-11 right-0 bg-white shadow-md rounded py-2 scale-up">
+        {showemployeemenu && <div className="absolute top-12 right-0 bg-white shadow-md rounded-lg py-2 scale-up border border-gray-300">
           <div className="flex px-4 py-1 cursor-pointer hover:bg-slate-100">{localStorage.getItem('campus')}</div>
           <div onClick={handleLogout} className="flex px-4 py-1 cursor-pointer hover:bg-slate-100">Log out</div>
-          <p className='px-4 mt-2 text-xs text-gray-600'>
+          <p className='px-4 mt-3 text-xs text-gray-600'>
             Powered by <b className="text-orange-500">CodeCrafters Inc.</b>
           </p>
         </div>}

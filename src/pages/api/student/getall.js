@@ -5,7 +5,7 @@ async function handler(req, res) {
 
     if (!req.method === 'GET' || !req.query.campus) return res.status(400).json({ message: 'Invalid request!' })
 
-    const items = 10;
+    const items = parseInt(req.query.items || '10');
     let page = parseInt(req.query.page || '0');
     let total = 0;
     let students = [];
