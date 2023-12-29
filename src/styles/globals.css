@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
 * {
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto;
+    letter-spacing: 0rem;
 }
 body{
     background-color: rgb(0, 0, 0, 0.03);

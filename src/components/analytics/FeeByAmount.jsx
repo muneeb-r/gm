@@ -69,7 +69,7 @@ const FeeByAmount = () => {
   }
 
   return (
-    <div className='col-span-2 p-3 rounded-lg border border-gray-200 flex flex-col gap-3'>
+    <div className='col-span-2 p-3 rounded-lg border border-gray-200 flex flex-col gap-3 bg-white'>
       <div className="flex items-center justify-between flex-wrap">
         <div className="flex gap-3 items-center flex-wrap">
           <select onChange={handeTypeChange} name="type" className='base__select bg-white px-1 text-sm'>

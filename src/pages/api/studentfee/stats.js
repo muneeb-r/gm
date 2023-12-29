@@ -43,7 +43,7 @@ async function handler(req, res) {
                         }
                     },
                     {
-                        $limit: 22
+                        $limit: 32
                     }
                 ])
 
@@ -80,7 +80,7 @@ async function handler(req, res) {
                     }
                 },
                 {
-                    $limit: 22
+                    $limit: 32
                 }
             ])
         }
