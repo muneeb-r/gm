@@ -477,7 +477,7 @@ const StudentRow = ({
     document.addEventListener("mousedown", closeMenu);
     return () => document.removeEventListener("mousedown", closeMenu);
   }, []);
-
+  console.log(student.rn);
   return (
     <>
       <tr
@@ -526,8 +526,8 @@ const StudentRow = ({
               </svg>
             </div>
             <div
-              className={`absolute w-[110px] py-2 rounded bg-white transition-all duration-300 ease-in-out flex flex-col shadow-md border border-gray-100 ${
-                showMenu ? "scale-100 top-5 right-12" : "scale-0 -top-5 right-0"
+              className={`absolute w-[140px] top-6 right-12 origin-top-right py-2 rounded bg-white transition-all duration-200 ease-in-out flex flex-col shadow-lg border border-gray-100 ${
+                showMenu ? "scale-100" : "scale-0"
               }`}
             >
               <div

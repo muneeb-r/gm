@@ -22,13 +22,11 @@ export default function App({ Component, pageProps }) {
         }}
       />
       <AuthProvider>
-        <div className="p-0 md:p-2">
-          <Component {...pageProps} />
-          <div className="fixed bottom-3 right-3 backdrop-blur-sm rounded-lg">
-            <p className="px-4 mt-2 text-xs text-gray-600">
-              Powered by <b className="text-orange-500">CodeCrafters Inc.</b>
-            </p>
-          </div>
+        <Component {...pageProps} />
+        <div className="fixed bottom-3 right-3 backdrop-blur-sm rounded-lg">
+          <p className="px-4 mt-2 text-xs text-gray-600">
+            Powered by <b className="text-orange-500">CodeCrafters Inc.</b>
+          </p>
         </div>
       </AuthProvider>
     </>
